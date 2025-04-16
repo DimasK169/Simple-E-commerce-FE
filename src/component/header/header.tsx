@@ -3,6 +3,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import PersonIcon from "@mui/icons-material/Person";
 import SearchIcon from "@mui/icons-material/Search"; // ✅ Import the icon
+import Notification from "./notification";
 
 const navData = [
   {
@@ -55,20 +56,16 @@ const Header: React.FC = () => {
         </button>
       </div>
 
-      {/* Navigation Icons */}
       <nav className="hidden md:flex gap-6">
-        {navData.map((item, idx) => (
-          <a
-            key={idx}
-            href={item.route}
-            className="text-gray-700 hover:text-red-500"
-          >
-            {item.icon}
-          </a>
-        ))}
+        <a href={"/"} className="text-gray-700 hover:text-red-500">
+          <ShoppingCartIcon />
+        </a>
+        <a href={"/"} className="text-gray-700 hover:text-red-500">
+          <PersonIcon />
+        </a>
+        <Notification />
       </nav>
 
-      {/* Mobile Menu Button */}
       <button
         onClick={() => setToggle((prev) => !prev)}
         className="flex md:hidden"
