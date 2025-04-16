@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Pusher from "pusher-js";
 

@@ -1,27 +1,8 @@
 import React, { useState } from "react";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import PersonIcon from "@mui/icons-material/Person";
 import SearchIcon from "@mui/icons-material/Search"; // ✅ Import the icon
 import Notification from "./notification";
-
-const navData = [
-  {
-    route: "/",
-    label: "Cart",
-    icon: <ShoppingCartIcon />,
-  },
-  {
-    route: "/",
-    label: "Profile",
-    icon: <PersonIcon />,
-  },
-  {
-    route: "/",
-    label: "Notification",
-    icon: <NotificationsIcon />,
-  },
-];
 
 const Header: React.FC = () => {
   const [toggle, setToggle] = useState<boolean>(false);
