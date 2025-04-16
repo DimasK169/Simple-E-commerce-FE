@@ -1,10 +1,13 @@
-import React from 'react'
-import Home from './pages/home'
+import React from "react";
+import Header from "./component/header/header";
 
 const Layout = () => {
   return (
-    <Home/>
-  )
-}
+    <div className="flex flex-col min-h-screen">
+      <Header />
+      <div className="grow"></div>
+    </div>
+  );
+};
 
-export default Layout
+export default Layout;
