@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { getProductList } from "@/services/product/list/api"; // Adjust path as needed
+import { getProductList } from "@/services/product/list/api";
 import ProductCard from "@/components/productCard/productCard";
-import { Content } from "@/services/product/type"; // Assuming this is where your product type is
+import { Content } from "@/services/product/type";
 
 const ProductsPage: React.FC = () => {
   const [products, setProducts] = useState<Content[]>([]);
@@ -11,8 +11,13 @@ const ProductsPage: React.FC = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const data = await getProductList(0, 20);
-        if (data) setProducts(data.content);
+        const root = await getProductList(0, 20); // root: Root | undefined
+
+        if (root?.data?.content) {
+          setProducts(root.data.content); // ✅ safely set products
+        } else {
+          setProducts([]);
+        }
       } catch (err: any) {
         setError(err.message || "Failed to fetch products");
       } finally {
@@ -29,6 +34,8 @@ const ProductsPage: React.FC = () => {
 
       {loading && <p>Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
+
+      {!loading && products.length === 0 && <p>No products found.</p>}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {products.map((item, index) => (

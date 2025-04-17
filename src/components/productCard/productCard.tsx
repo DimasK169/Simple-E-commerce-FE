@@ -34,7 +34,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
           {discount && <Badge variant="destructive">Discount</Badge>}
         </div>
 
-        <p className="text-xl font-bold text-green-600">${price.toFixed(2)}</p>
+        <p className="text-xl font-bold text-green-600">
+          {new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            minimumFractionDigits: 0,
+          }).format(price)}
+        </p>
 
         {isAdmin && (
           <div className="space-y-1">
