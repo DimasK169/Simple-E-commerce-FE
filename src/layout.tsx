@@ -1,14 +1,12 @@
-import React from "react";
-import Header from "./component/header/header";
-import Home from "./pages/home/home";
-import EditProduct from "./pages/product/editProduct";
+import Header from "./components/header/header";
+import { Outlet } from "react-router";
 
 const Layout = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <div className="grow">
-        <EditProduct />
+        <Outlet />
       </div>
     </div>
   );

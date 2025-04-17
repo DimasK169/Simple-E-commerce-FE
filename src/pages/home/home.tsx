@@ -1,5 +1,5 @@
 import React from "react";
-import ProductCard from "@/component/productCard/productCard";
+import ProductCard from "@/components/productCard/productCard";
 // import ProductForm from "@/component/productForm/productForm";
 
 const Home: React.FC = () => {
@@ -20,7 +20,7 @@ const Home: React.FC = () => {
           discount={true}
           stock={12}
           status="available"
-          isAdmin={true}
+          isAdmin={false}
         />
       </div>
     </div>

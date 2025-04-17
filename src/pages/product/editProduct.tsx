@@ -1,5 +1,5 @@
-import ProductCard from "@/component/productCard/productCard";
-import ProductForm from "@/component/productForm/productForm";
+import ProductCard from "@/components/productCard/productCard";
+import ProductForm from "@/components/productForm/productForm";
 import React from "react";
 
 const EditProduct: React.FC = () => {
@@ -14,7 +14,7 @@ const EditProduct: React.FC = () => {
       discount={true}
       stock={12}
       status="available"
-      isAdmin={true}
+      isAdmin={false}
     />
   );
 };
