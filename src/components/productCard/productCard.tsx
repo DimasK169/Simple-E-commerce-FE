@@ -2,6 +2,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
+//Buat di pages home ada 2 sesi
+//sesi 1 flash-sale get dari flash sale otomatis discount true
+//sesi 2 get dari product otomatis discount false
+
 interface ProductCardProps {
   image: string;
   name: string;
