@@ -1,8 +1,9 @@
 import { createBrowserRouter } from "react-router";
 import Layout from "../layout";
-import Payment from "../pages/payment/payment";
+import Payment from "../pages/payment/finishedPayment.tsx/finishedPayment";
 import Login from "../pages/users/login/login";
 import UnfinishedPayment from "../pages/payment/unfinishedPayment/unfinishedPayment";
+import Cart from "../pages/cart/cart";
 
 export const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ export const router = createBrowserRouter([
       {
         element: <UnfinishedPayment />,
         path: "/payment",
+      },
+      {
+        element: <Cart />,
+        path: "/cart",
       },
     ],
   },

@@ -1,17 +1,18 @@
 import React, { useState } from "react";
+import { PaymentData, ProductItem } from "../../services/payment/payment/type";
 
 interface CardProps {
-  data: any;
+  data: PaymentData[] | null;
 }
 
 const Card: React.FC<CardProps> = ({ data }) => {
-  if (!data) return <p>Loading...</p>;
-
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  if (!data) return <p>Loading...</p>;
 
   return (
     <div className="p-4">
-      {data.map((item: any, index: number) => {
+      {data.map((item, index) => {
         const isOpen = openIndex === index;
 
         return (
@@ -29,7 +30,7 @@ const Card: React.FC<CardProps> = ({ data }) => {
                 </p>
                 <p>
                   <strong>Total Harga:</strong> Rp{" "}
-                  {Number(item.Cart_Total_Price).toLocaleString()}
+                  {item.Cart_Total_Price.toLocaleString()}
                 </p>
               </div>
 
@@ -43,7 +44,7 @@ const Card: React.FC<CardProps> = ({ data }) => {
                     className={`px-2 py-1 rounded-full text-xs font-semibold ${
                       item.Payment_Status === "settlement"
                         ? "bg-green-100 text-green-700"
-                        : item.Payment_Status === "expired"
+                        : item.Payment_Status === "expire"
                         ? "bg-red-100 text-red-600"
                         : "bg-gray-100 text-gray-700"
                     }`}
@@ -103,7 +104,7 @@ const Card: React.FC<CardProps> = ({ data }) => {
             {isOpen && (
               <div className="mt-5 bg-gray-50 p-4 rounded-lg">
                 <p className="font-medium mb-3 text-gray-700">Cart Items:</p>
-                {item.Product.map((detail: any, idx: number) => (
+                {item.Product.map((detail: ProductItem, idx: number) => (
                   <div
                     key={idx}
                     className="grid grid-cols-3 gap-4 text-sm text-center border-b border-gray-200 py-2"
