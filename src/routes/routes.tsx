@@ -5,7 +5,8 @@ import EditProduct from "@/pages/product/editProduct";
 import FinishedPayment from "@/pages/payment/finishedPayment.tsx/finishedPayment";
 import Login from "../pages/users/login/login";
 import UnfinishedPayment from "../pages/payment/unfinishedPayment/unfinishedPayment";
-import Cart from "../pages/cart/cart";
+import Public from "./public";
+import Protected from "./protected";
 
 export const router = createBrowserRouter([
   {
@@ -13,24 +14,34 @@ export const router = createBrowserRouter([
     path: "/",
     children: [
       {
+        element: <Public />,
+        children: [
+          {
+            element: <Login />,
+            path: "/login",
+          },
+        ],
+      },
+      {
+        element: <Protected />,
+        children: [
+          {
+            element: <FinishedPayment />,
+            path: "/payment/finished",
+          },
+          {
+            element: <UnfinishedPayment />,
+            path: "/payment",
+          },
+          {
+            element: <EditProduct />,
+            path: "/a",
+          },
+        ],
+      },
+      {
         element: <Home />,
         index: true,
-      },
-      {
-        element: <Login />,
-        path: "/login",
-      },
-      {
-        element: <FinishedPayment />,
-        path: "/payment/finished",
-      },
-      {
-        element: <UnfinishedPayment />,
-        path: "/payment",
-      },
-      {
-        element: <EditProduct />,
-        path: "/a",
       },
     ],
   },

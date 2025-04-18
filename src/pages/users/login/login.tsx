@@ -3,24 +3,29 @@ import React, { useState } from "react";
 import background from "../../../assets/bg.jpg";
 import { useNavigate } from "react-router";
 import { login } from "../../../services/users/login/api";
+import { useAuth } from "@/context/authContext";
+import axiosWithConfig from "@/services/users/api";
 
 function LoginForm() {
+  const { setAuth } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const result = await login(email, password);
-    if (result.success) {
-      alert("Login berhasil");
-    } else {
-      alert(result.message);
-    }
-  };
 
-  const handleClick = () => {
-    navigate(`/payment/finished`);
+    try {
+      const response = await axiosWithConfig.post(`/users/login`, {
+        User_Email: email,
+        User_Password: password,
+      });
+      localStorage.setItem("token", response.data.data.User_Token);
+      setAuth(response.data.data);
+      navigate("/");
+    } catch (error) {
+      console.error("Login error:", error);
+    }
   };
 
   return (
@@ -77,7 +82,6 @@ function LoginForm() {
           {}
           <button
             type="submit"
-            onClick={handleClick}
             className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-md transition duration-200"
           >
             Login
