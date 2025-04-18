@@ -16,9 +16,8 @@ export const router = createBrowserRouter([
         index: true,
       },
       {
-
         element: <Login />,
-        index: true,
+        path: "/login",
       },
       {
         element: <Payment />,
@@ -31,7 +30,7 @@ export const router = createBrowserRouter([
       {
         element: <EditProduct />,
         path: "/a",
-      }
+      },
     ],
   },
 ]);
