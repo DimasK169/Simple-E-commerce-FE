@@ -1,12 +1,23 @@
 import React, { useState } from "react";
-import { PaymentData, ProductItem } from "../../services/payment/payment/type";
+import QRCode from "react-qr-code";
+import {
+  PaymentData,
+  ProductItem,
+} from "../../../services/payment/payment/type";
+import { extractUrlsFromResponse } from "../../../utils/extractUrlsFromResponse";
 
 interface CardProps {
-  data: PaymentData[] | null;
+  data: PaymentData[];
 }
 
 const Card: React.FC<CardProps> = ({ data }) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  const copyToClipboard = (url: string) => {
+    navigator.clipboard.writeText(url).then(() => {
+      alert("QR Code URL copied to clipboard!");
+    });
+  };
 
   if (!data) return <p>Loading...</p>;
 
@@ -14,6 +25,16 @@ const Card: React.FC<CardProps> = ({ data }) => {
     <div className="p-4">
       {data.map((item, index) => {
         const isOpen = openIndex === index;
+
+        // Parsing Payment_Third_Party jika ada
+        const paymentBody = item.Payment_Third_Party;
+        const { qrUrl, deeplinkUrl } = extractUrlsFromResponse(paymentBody);
+        console.log(qrUrl);
+
+        // Cek jika status pembayaran adalah "settlement" atau "expire"
+        const isSettlementOrExpire =
+          item.Payment_Status === "settlement" ||
+          item.Payment_Status === "expire";
 
         return (
           <div
@@ -123,6 +144,34 @@ const Card: React.FC<CardProps> = ({ data }) => {
                     </span>
                   </div>
                 ))}
+
+                {/* Hanya tampilkan QR Code, Copy URL, dan Go to Payment jika status bukan settlement atau expire */}
+                {!isSettlementOrExpire && qrUrl && (
+                  <div className="mt-4 flex flex-col items-center">
+                    <p className="font-medium text-gray-700 mb-2">
+                      Scan QR Code:
+                    </p>
+                    <QRCode value={qrUrl} size={128} />
+                    <div className="mt-4 flex gap-2">
+                      <button
+                        onClick={() => copyToClipboard(qrUrl!)}
+                        className="bg-blue-500 text-white px-4 py-2 rounded-full"
+                      >
+                        Copy QR Code URL
+                      </button>
+                      {deeplinkUrl && (
+                        <a
+                          href={deeplinkUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="bg-blue-500 text-white px-4 py-2 rounded-full"
+                        >
+                          Go to Payment
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>

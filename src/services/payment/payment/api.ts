@@ -1,9 +1,9 @@
 import axiosWithConfig from "../api";
 
-export const createPayment = async () => {
+export const createPayment = async (type: string) => {
   try {
     const response = await axiosWithConfig.post(`/payment/create`, {
-      Payment_Type: "gopay",
+      Payment_Type: type,
     });
 
     return { success: true, message: response.data.message };
