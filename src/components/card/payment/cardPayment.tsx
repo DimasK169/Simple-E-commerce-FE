@@ -7,7 +7,7 @@ import {
 import { extractUrlsFromResponse } from "../../../utils/extractUrlsFromResponse";
 
 interface CardProps {
-  data: PaymentData[];
+  data: PaymentData[] | null;
 }
 
 const Card: React.FC<CardProps> = ({ data }) => {
