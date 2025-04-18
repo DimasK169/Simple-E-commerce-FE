@@ -1,11 +1,15 @@
 import { getFlashSale } from "@/services/flashsale/get/api";
-import React, { use } from "react";
+import { use } from "react";
 import { Badge } from "../ui/badge";
+import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { Button } from "../ui/button";
-import { Card, CardContent } from "../ui/card";
+import { LuShoppingCart } from "react-icons/lu";
+import { useAuth } from "@/context/authContext";
+import dayjs from "dayjs";
 
 const productsPromise = getFlashSale(0, 15);
 export default function FlashSale() {
+  const { auth } = useAuth();
   const result = use(productsPromise);
 
   return (
@@ -13,62 +17,47 @@ export default function FlashSale() {
       <h1>Flash Sale</h1>
       <div className="flex gap-4 overflow-x-scroll w-full ">
         {result.data.content.map((product) => (
-          <Card
-            className="shrink-0 w-80 rounded-2xl shadow-md overflow-hidden"
-            key={product.FlashSale_Name}
-          >
-            <img
-              src={product.Product_Image}
-              alt={product.FlashSale_Product}
-              className="w-full h-48 object-cover"
-            />
+          <Card className="w-80 overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+            {/* Sale badge */}
+            <div className="relative">
+              <img
+                src={product.Product_Image}
+                alt={product.FlashSale_Product}
+                className="w-full h-48 object-cover"
+              />
+              <Badge className="absolute top-3 right-3 bg-red-500 text-white font-bold">
+                {product.FlashSale_Discount * 100}% OFF
+              </Badge>
+            </div>
 
-            <CardContent className="p-4 space-y-3">
-              <div className="flex items-center justify-between">
-                <h2 className="text-lg font-semibold">
-                  {product.FlashSale_Product}
-                </h2>
-                {product.FlashSale_Discount * 100 && (
-                  <Badge variant="destructive">Discount</Badge>
-                )}
+            <CardHeader>
+              <h3 className="font-semibold text-lg">
+                {product.FlashSale_Product}
+              </h3>
+            </CardHeader>
+
+            <CardContent>
+              <div className="flex items-center gap-2">
+                <span className="text-lg font-bold text-red-600">
+                  Rp {product.FlashSale_Price.toLocaleString("id-ID")}
+                </span>
+                <span className="text-gray-500 line-through text-sm">
+                  Rp {product.Product_Price.toLocaleString("id-ID")}
+                </span>
               </div>
-
-              <p className="text-xl font-bold text-green-600">
-                {new Intl.NumberFormat("id-ID", {
-                  style: "currency",
-                  currency: "IDR",
-                  minimumFractionDigits: 0,
-                }).format(product.FlashSale_Price)}
+              <p className="text-xs text-gray-500 mt-1">
+                Flash sale selesai pada{" "}
+                {dayjs(product.FlashSale_EndDate).format("DD-MM-YYYY HH:mm:ss")}
               </p>
+            </CardContent>
 
-              {/* {isAdmin && (
-              <div className="space-y-1">
-                <Badge
-                  variant={status === "available" ? "default" : "secondary"}
-                >
-                  {status === "available" ? "Available" : "N/A"}
-                </Badge>
-              </div>
-            )}
-
-            <div className="flex flex-wrap gap-2 pt-3">
-              {!isAdmin && (
-                <Button className="flex-1" onClick={() => {}}>
-                  Add to Cart
+            <CardFooter className="pt-0">
+              {auth?.User_Role === "Customer" && (
+                <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                  <LuShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
                 </Button>
               )}
-              {isAdmin && (
-                <>
-                  <Button variant="outline" onClick={() => {}}>
-                    Edit
-                  </Button>
-                  <Button variant="destructive" onClick={() => {}}>
-                    Delete
-                  </Button>
-                </>
-              )}
-            </div> */}
-            </CardContent>
+            </CardFooter>
           </Card>
         ))}
       </div>

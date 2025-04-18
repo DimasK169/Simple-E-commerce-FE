@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const axiosWithConfig = axios.create({
+const productClient = axios.create({
   baseURL: "http://localhost:8080",
 });
 
-export default axiosWithConfig;
+export default productClient;

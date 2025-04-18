@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import background from "../../../assets/bg.jpg";
 import { useNavigate } from "react-router";
-import { login } from "../../../services/users/login/api";
 import { useAuth } from "@/context/authContext";
 import axiosWithConfig from "@/services/users/api";
 
