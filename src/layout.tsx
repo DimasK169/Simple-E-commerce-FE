@@ -1,10 +1,14 @@
-import React from 'react'
-import Home from './pages/home'
+import React from "react";
+import { Outlet } from "react-router";
 
-const Layout = () => {
+const layout: React.FC = () => {
   return (
-    <Home/>
-  )
-}
+    <div className="flex flex-col h-screen">
+      <div className="grow overflow-y-auto overflow-visible w-full">
+        <Outlet />
+      </div>
+    </div>
+  );
+};
 
-export default Layout
+export default layout;
