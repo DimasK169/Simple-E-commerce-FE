@@ -1,11 +1,10 @@
 // src/components/LoginForm.jsx
 import React, { useState } from "react";
-import useAuth from "../../../hooks/users/login";
 import background from "../../../assets/bg.jpg";
 import { useNavigate } from "react-router";
+import { login } from "../../../services/users/login/api";
 
 function LoginForm() {
-  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();

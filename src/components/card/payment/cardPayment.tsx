@@ -1,18 +1,40 @@
 import React, { useState } from "react";
+import QRCode from "react-qr-code";
+import {
+  PaymentData,
+  ProductItem,
+} from "../../../services/payment/payment/type";
+import { extractUrlsFromResponse } from "../../../utils/extractUrlsFromResponse";
 
 interface CardProps {
-  data: any;
+  data: PaymentData[] | null;
 }
 
 const Card: React.FC<CardProps> = ({ data }) => {
-  if (!data) return <p>Loading...</p>;
-
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  const copyToClipboard = (url: string) => {
+    navigator.clipboard.writeText(url).then(() => {
+      alert("QR Code URL copied to clipboard!");
+    });
+  };
+
+  if (!data) return <p>Loading...</p>;
 
   return (
     <div className="p-4">
-      {data.map((item: any, index: number) => {
+      {data.map((item, index) => {
         const isOpen = openIndex === index;
+
+        // Parsing Payment_Third_Party jika ada
+        const paymentBody = item.Payment_Third_Party;
+        const { qrUrl, deeplinkUrl } = extractUrlsFromResponse(paymentBody);
+        console.log(qrUrl);
+
+        // Cek jika status pembayaran adalah "settlement" atau "expire"
+        const isSettlementOrExpire =
+          item.Payment_Status === "settlement" ||
+          item.Payment_Status === "expire";
 
         return (
           <div
@@ -29,7 +51,7 @@ const Card: React.FC<CardProps> = ({ data }) => {
                 </p>
                 <p>
                   <strong>Total Harga:</strong> Rp{" "}
-                  {Number(item.Cart_Total_Price).toLocaleString()}
+                  {item.Cart_Total_Price.toLocaleString()}
                 </p>
               </div>
 
@@ -43,7 +65,7 @@ const Card: React.FC<CardProps> = ({ data }) => {
                     className={`px-2 py-1 rounded-full text-xs font-semibold ${
                       item.Payment_Status === "settlement"
                         ? "bg-green-100 text-green-700"
-                        : item.Payment_Status === "expired"
+                        : item.Payment_Status === "expire"
                         ? "bg-red-100 text-red-600"
                         : "bg-gray-100 text-gray-700"
                     }`}
@@ -103,7 +125,7 @@ const Card: React.FC<CardProps> = ({ data }) => {
             {isOpen && (
               <div className="mt-5 bg-gray-50 p-4 rounded-lg">
                 <p className="font-medium mb-3 text-gray-700">Cart Items:</p>
-                {item.Product.map((detail: any, idx: number) => (
+                {item.Product.map((detail: ProductItem, idx: number) => (
                   <div
                     key={idx}
                     className="grid grid-cols-3 gap-4 text-sm text-center border-b border-gray-200 py-2"
@@ -122,6 +144,34 @@ const Card: React.FC<CardProps> = ({ data }) => {
                     </span>
                   </div>
                 ))}
+
+                {/* Hanya tampilkan QR Code, Copy URL, dan Go to Payment jika status bukan settlement atau expire */}
+                {!isSettlementOrExpire && qrUrl && (
+                  <div className="mt-4 flex flex-col items-center">
+                    <p className="font-medium text-gray-700 mb-2">
+                      Scan QR Code:
+                    </p>
+                    <QRCode value={qrUrl} size={128} />
+                    <div className="mt-4 flex gap-2">
+                      <button
+                        onClick={() => copyToClipboard(qrUrl!)}
+                        className="bg-blue-500 text-white px-4 py-2 rounded-full"
+                      >
+                        Copy QR Code URL
+                      </button>
+                      {deeplinkUrl && (
+                        <a
+                          href={deeplinkUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="bg-blue-500 text-white px-4 py-2 rounded-full"
+                        >
+                          Go to Payment
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>

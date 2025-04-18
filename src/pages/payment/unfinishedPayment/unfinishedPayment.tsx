@@ -1,9 +1,9 @@
 import React from "react";
-import { useGetPayment } from "../../../hooks/payment/unfinishedPayment/useGetPayment";
-import Card from "../../../components/card/card";
+import Card from "../../../components/card/payment/cardPayment";
+import { useGetPayment } from "../../../hooks/payment/useGetPayment";
 
 const UnfinishedPayment: React.FC = () => {
-  const { payment } = useGetPayment();
+  const { payment } = useGetPayment("pending");
 
   return <Card data={payment}></Card>;
 };
