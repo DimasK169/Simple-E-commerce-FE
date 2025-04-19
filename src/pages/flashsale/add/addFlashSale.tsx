@@ -1,8 +1,8 @@
-import FlashSaleForm from "@/components/flashsale/flashsaleForm";
+import FlashSaleAddForm from "@/components/flashsale/flashsaleAddForm";
 import React from "react";
 
 const AddFlashSale: React.FC = () => {
-  return <FlashSaleForm />;
+  return <FlashSaleAddForm />;
 };
 
 export default AddFlashSale;

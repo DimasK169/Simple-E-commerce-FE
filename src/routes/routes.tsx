@@ -13,6 +13,7 @@ import Protected from "./protected";
 import EditProduct from "@/pages/product/editproduct";
 import ProductDetailPage from "@/pages/product/detailProduct";
 import ProductSearch from "@/pages/search/search";
+import UpdateFlashSale from "@/pages/flashsale/update/updateFlashSale";
 
 export const router = createBrowserRouter([
   {
@@ -77,6 +78,10 @@ export const router = createBrowserRouter([
       {
         element: <ProductSearch />,
         path: "/search",
+      },
+      {
+        element: <UpdateFlashSale />,
+        path: "/flash-sale/update/:code",
       },
     ],
   },

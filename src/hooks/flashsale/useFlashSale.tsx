@@ -1,4 +1,4 @@
-import { getFlashSale } from "@/services/flashsale/get/api";
+import { getFlashSale } from "@/services/flashsale/flashsale/api";
 import { FlashSaleItem } from "@/services/flashsale/type";
 import { useEffect, useState } from "react";
 
