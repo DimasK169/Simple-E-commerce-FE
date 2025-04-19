@@ -2,6 +2,7 @@ export type FlashSaleItem = {
   FlashSale_Name: string;
   FlashSale_Code: string;
   FlashSale_Product: string;
+  Product_Code: string;
   FlashSale_Discount: number; // e.g. 0.5 for 50%
   Product_Price: number; // original product price
   FlashSale_Price: number; // discounted price

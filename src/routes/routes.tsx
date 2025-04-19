@@ -10,6 +10,7 @@ import FlashSale from "@/pages/flashsale/flashsale";
 import AddFlashSale from "@/pages/flashsale/add/addFlashSale";
 import Public from "./public";
 import Protected from "./protected";
+import UpdateFlashSale from "@/pages/flashsale/update/updateFlashSale";
 
 export const router = createBrowserRouter([
   {
@@ -57,6 +58,10 @@ export const router = createBrowserRouter([
       {
         element: <AddFlashSale />,
         path: "/flash-sale/add",
+      },
+      {
+        element: <UpdateFlashSale />,
+        path: "/flash-sale/update/:code",
       },
     ],
   },

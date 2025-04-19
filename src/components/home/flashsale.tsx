@@ -1,4 +1,4 @@
-import { getFlashSale } from "@/services/flashsale/get/api";
+import { getFlashSale } from "@/services/flashsale/flashsale/api";
 import { use } from "react";
 import { Badge } from "../ui/badge";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
