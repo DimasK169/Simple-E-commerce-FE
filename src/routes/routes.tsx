@@ -7,6 +7,7 @@ import Login from "../pages/users/login/login";
 import UnfinishedPayment from "../pages/payment/unfinishedPayment/unfinishedPayment";
 import Public from "./public";
 import Protected from "./protected";
+import Cart from "@/pages/cart/cart";
 
 export const router = createBrowserRouter([
   {
@@ -20,11 +21,6 @@ export const router = createBrowserRouter([
             element: <Login />,
             path: "/login",
           },
-        ],
-      },
-      {
-        element: <Protected />,
-        children: [
           {
             element: <FinishedPayment />,
             path: "/payment/finished",
@@ -33,6 +29,15 @@ export const router = createBrowserRouter([
             element: <UnfinishedPayment />,
             path: "/payment",
           },
+          {
+            element: <Cart />,
+            path: "/cart",
+          },
+        ],
+      },
+      {
+        element: <Protected />,
+        children: [
           {
             element: <EditProduct />,
             path: "/a",
