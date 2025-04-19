@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { getProductList } from "@/services/product/list/api"; // adjust this import path
+import { useEffect, useState } from "react"; // adjust this import path
 import { Content, Pageable } from "@/services/product/type"; // adjust if needed
+import { getProducts } from "@/services/product/list/api";
 
 export const useProductList = () => {
   const [products, setProducts] = useState<Content[]>([]);
@@ -23,7 +23,7 @@ export const useProductList = () => {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const data = await getProductList(
+      const data = await getProducts(
         pagination.pageNumber,
         pagination.pageSize || 20
       );
