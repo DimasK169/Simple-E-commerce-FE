@@ -10,7 +10,6 @@ import FlashSale from "@/pages/flashsale/flashsale";
 import AddFlashSale from "@/pages/flashsale/add/addFlashSale";
 import Public from "./public";
 import Protected from "./protected";
-import Cart from "@/pages/cart/cart";
 
 export const router = createBrowserRouter([
   {
