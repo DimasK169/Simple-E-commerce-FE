@@ -5,7 +5,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import CustomTable from "@/components/ui/custom-table";
-import { getFlashSale } from "@/services/flashsale/get/api";
+import { getFlashSale } from "@/services/flashsale/flashsale/api";
 import { FlashSaleItem } from "@/services/flashsale/type";
 import { Button } from "@/components/ui/button";
 
@@ -38,6 +38,10 @@ const FlashSale: React.FC = () => {
     navigate("/flash-sale/add");
   };
 
+  const handleUpdateFlashSale = (code: string) => {
+    navigate(`/flash-sale/update/${code}`);
+  };
+
   const columns = [
     { header: "Name", accessor: "FlashSale_Name" },
     { header: "Code", accessor: "FlashSale_Code" },
@@ -65,7 +69,10 @@ const FlashSale: React.FC = () => {
     action: (
       <div className="flex flex-row gap-5 justify-center items-center">
         <InfoIcon className="text-blue-500 cursor-pointer" />
-        <SettingsIcon className="text-yellow-500 cursor-pointer" />
+        <SettingsIcon
+          className="text-yellow-500 cursor-pointer"
+          onClick={() => handleUpdateFlashSale(item.FlashSale_Code)}
+        />
         <DeleteIcon className="text-red-500 cursor-pointer" />
       </div>
     ),

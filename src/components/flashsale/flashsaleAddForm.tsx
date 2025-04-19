@@ -17,7 +17,7 @@ import { Content } from "@/services/product/type";
 import ProductCardSelect from "../productCard/simple/productCard";
 import { getProducts } from "@/services/product/list/api";
 import { useNavigate } from "react-router";
-import { createFlashSale } from "@/services/flashsale/get/api";
+import { createFlashSale } from "@/services/flashsale/flashsale/api";
 
 const formSchema = z.object({
   FlashSale_Name: z.string().min(1, "Nama flash sale wajib diisi"),
@@ -28,7 +28,7 @@ const formSchema = z.object({
   Product_Code: z.array(z.string()).min(1, "Minimal pilih 1 produk"),
 });
 
-const FlashSaleForm = () => {
+const FlashSaleAddForm = () => {
   const [products, setProducts] = useState<Content[]>([]);
   const [selectedCodes, setSelectedCodes] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -46,12 +46,10 @@ const FlashSaleForm = () => {
     },
   });
 
-  // Sync Product_Code ke form setiap kali dipilih
   useEffect(() => {
     form.setValue("Product_Code", selectedCodes);
   }, [selectedCodes, form]);
 
-  // Fetch produk
   useEffect(() => {
     const fetchProducts = async () => {
       const res = await getProducts(0);
@@ -62,14 +60,12 @@ const FlashSaleForm = () => {
     fetchProducts();
   }, []);
 
-  // Toggle produk
   const toggleProduct = (code: string) => {
     setSelectedCodes((prev) =>
       prev.includes(code) ? prev.filter((c) => c !== code) : [...prev, code]
     );
   };
 
-  // Handle submit
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const finalData = {
       ...values,
@@ -214,4 +210,4 @@ const FlashSaleForm = () => {
   );
 };
 
-export default FlashSaleForm;
+export default FlashSaleAddForm;
