@@ -116,7 +116,7 @@ export default function ProductList() {
 
                 <CardContent>
                   <div className="flex items-center gap-2">
-                    <span className="text-gray-500 line-through text-sm">
+                    <span className="text-lg font-bold text-red-600">
                       Rp {product.productPrice.toLocaleString("id-ID")}
                     </span>
                   </div>

@@ -16,7 +16,7 @@ import {
 import { Content } from "@/services/product/type";
 import ProductCardSelect from "../productCard/simple/productCard";
 import { getProducts } from "@/services/product/list/api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { createFlashSale } from "@/services/flashsale/get/api";
 
 const formSchema = z.object({
