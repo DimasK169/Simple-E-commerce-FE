@@ -1,5 +1,6 @@
 import Header from "./components/header/header";
 import { Outlet } from "react-router";
+import { Toaster } from "@/components/ui/sonner";
 
 const layout: React.FC = () => {
   return (
@@ -8,6 +9,7 @@ const layout: React.FC = () => {
       <div className="grow">
         <Outlet />
       </div>
+      <Toaster />
     </div>
   );
 };

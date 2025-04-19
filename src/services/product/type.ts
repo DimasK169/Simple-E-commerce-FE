@@ -4,6 +4,12 @@ export interface Root {
   data: Data;
 }
 
+export interface Product {
+  code: string;
+  message: string;
+  data: Content;
+}
+
 export interface Data {
   content: Content[];
   pageable: Pageable;

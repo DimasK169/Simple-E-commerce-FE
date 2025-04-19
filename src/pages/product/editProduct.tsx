@@ -1,9 +1,8 @@
-import ProductCard from "@/components/productCard/productCard";
-import ProductForm from "@/components/productForm/productForm";
+import ProductFormEdit from "@/components/productForm/productFormEdit";
 import React from "react";
 
 const EditProduct: React.FC = () => {
-  return <ProductForm />;
+  return <ProductFormEdit />;
 };
 
 export default EditProduct;

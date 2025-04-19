@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router";
 import Layout from "../layout";
 import Home from "@/pages/home/home";
-import EditProduct from "@/pages/product/editProduct";
+import AddProduct from "@/pages/product/addProduct";
 import FinishedPayment from "@/pages/payment/finishedPayment.tsx/finishedPayment";
 import Login from "../pages/users/login/login";
 import UnfinishedPayment from "../pages/payment/unfinishedPayment/unfinishedPayment";
@@ -10,8 +10,20 @@ import FlashSale from "@/pages/flashsale/flashsale";
 import AddFlashSale from "@/pages/flashsale/add/addFlashSale";
 import Public from "./public";
 import Protected from "./protected";
+import EditProduct from "@/pages/product/editproduct";
+import ProductDetailPage from "@/pages/product/detailProduct";
+import ProductSearch from "@/pages/search/search";
 
 export const router = createBrowserRouter([
+  {
+    element: <Public />,
+    children: [
+      {
+        element: <Login />,
+        path: "/login",
+      },
+    ],
+  },
   {
     element: <Layout />,
     path: "/",
@@ -19,10 +31,6 @@ export const router = createBrowserRouter([
       {
         element: <Public />,
         children: [
-          {
-            element: <Login />,
-            path: "/login",
-          },
           {
             element: <FinishedPayment />,
             path: "/payment/finished",
@@ -41,8 +49,12 @@ export const router = createBrowserRouter([
         element: <Protected />,
         children: [
           {
+            element: <AddProduct />,
+            path: "/products/add",
+          },
+          {
             element: <EditProduct />,
-            path: "/a",
+            path: "/products/:code",
           },
         ],
       },
@@ -57,6 +69,14 @@ export const router = createBrowserRouter([
       {
         element: <AddFlashSale />,
         path: "/flash-sale/add",
+      },
+      {
+        element: <ProductDetailPage />,
+        path: "/product/:code",
+      },
+      {
+        element: <ProductSearch />,
+        path: "/search",
       },
     ],
   },

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getProducts } from "@/services/product/list/api";
+import { searchProduct } from "@/services/product/list/api";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { Button } from "../ui/button";
 import { LuShoppingCart } from "react-icons/lu";
@@ -13,22 +13,25 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { Content } from "@/services/product/type";
 
-export default function ProductList() {
+export default function ProductListSearch() {
   const { auth } = useAuth();
   const [products, setProducts] = useState<Content[]>([]);
+  const [search, setSearch] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const pageSize = 8;
+  const keyword = searchParams.get("keyword");
 
   useEffect(() => {
     const fetchProducts = async () => {
       setIsLoading(true);
       try {
-        const result = await getProducts(currentPage, pageSize);
+        const result = await searchProduct(keyword, currentPage, pageSize);
         setProducts(result.data.content);
         setTotalPages(result.data.totalPages);
       } catch (error) {
@@ -102,7 +105,7 @@ export default function ProductList() {
                 key={product.id}
                 className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
               >
-                <Link to={`product/${product.productCode}`}>
+                <Link to={`/product/${product.productCode}`}>
                   <div className="relative">
                     <img
                       src={product.productImage}
