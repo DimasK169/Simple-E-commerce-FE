@@ -23,11 +23,6 @@ export const router = createBrowserRouter([
             element: <Login />,
             path: "/login",
           },
-        ],
-      },
-      {
-        element: <Protected />,
-        children: [
           {
             element: <FinishedPayment />,
             path: "/payment/finished",
@@ -36,6 +31,15 @@ export const router = createBrowserRouter([
             element: <UnfinishedPayment />,
             path: "/payment",
           },
+          {
+            element: <Cart />,
+            path: "/cart",
+          },
+        ],
+      },
+      {
+        element: <Protected />,
+        children: [
           {
             element: <EditProduct />,
             path: "/a",

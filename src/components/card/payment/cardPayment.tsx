@@ -5,6 +5,7 @@ import {
   ProductItem,
 } from "../../../services/payment/payment/type";
 import { extractUrlsFromResponse } from "../../../utils/extractUrlsFromResponse";
+import Countdown from "@/components/countdown/countdown";
 
 interface CardProps {
   data: PaymentData[] | null;
@@ -25,6 +26,7 @@ const Card: React.FC<CardProps> = ({ data }) => {
     <div className="p-4">
       {data.map((item, index) => {
         const isOpen = openIndex === index;
+        const endDate = item.Payment_End_Date.toString();
 
         // Parsing Payment_Third_Party jika ada
         const paymentBody = item.Payment_Third_Party;
@@ -41,6 +43,14 @@ const Card: React.FC<CardProps> = ({ data }) => {
             key={index}
             className="border rounded-2xl shadow-md p-6 mb-6 transition-all duration-300 bg-white hover:shadow-lg"
           >
+            {item.Payment_Status === "pending" && (
+              <div className="text-center pb-5">
+                <Countdown
+                  endDate={endDate}
+                  message="Waktu Pembayaran Berakhir"
+                />
+              </div>
+            )}
             <div className="flex flex-col md:flex-row justify-between gap-4 items-start md:items-center">
               <div className="flex-1 space-y-1">
                 <p

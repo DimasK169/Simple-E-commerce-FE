@@ -1,6 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+interface CountdownProps {
+  endDate: string;
+  message: string; // optional if you want default value
+}
 
-export default function Countdown({ endDate }: { endDate: string }) {
+export default function Countdown({ endDate, message }: CountdownProps) {
   const [timeLeft, setTimeLeft] = useState("");
 
   useEffect(() => {
@@ -11,7 +15,7 @@ export default function Countdown({ endDate }: { endDate: string }) {
 
       if (distance < 0) {
         clearInterval(interval);
-        setTimeLeft("Flash Sale Ended");
+        setTimeLeft(message);
         return;
       }
 
