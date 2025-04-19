@@ -5,6 +5,9 @@ import EditProduct from "@/pages/product/editProduct";
 import FinishedPayment from "@/pages/payment/finishedPayment.tsx/finishedPayment";
 import Login from "../pages/users/login/login";
 import UnfinishedPayment from "../pages/payment/unfinishedPayment/unfinishedPayment";
+import Cart from "../pages/cart/cart";
+import FlashSale from "@/pages/flashsale/flashsale";
+import AddFlashSale from "@/pages/flashsale/add/addFlashSale";
 import Public from "./public";
 import Protected from "./protected";
 import Cart from "@/pages/cart/cart";
@@ -47,6 +50,14 @@ export const router = createBrowserRouter([
       {
         element: <Home />,
         index: true,
+      },
+      {
+        element: <FlashSale />,
+        path: "/flash-sale",
+      },
+      {
+        element: <AddFlashSale />,
+        path: "/flash-sale/add",
       },
     ],
   },
