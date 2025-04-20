@@ -10,7 +10,7 @@ export const setAccessToken = (token: string) => {
 export const getAccessToken = () => accessToken;
 
 const axiosWithConfig = axios.create({
-  baseURL: "http://localhost:8082/",
+  baseURL: "http://localhost:8082",
 });
 
 axiosWithConfig.interceptors.request.use(

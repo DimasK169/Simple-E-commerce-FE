@@ -186,7 +186,10 @@ const FlashSaleDetail = () => {
             </div>
 
             <div className="pt-4">
-              <Button type="button" onClick={() => navigate("/flash-sale")}>
+              <Button
+                type="button"
+                onClick={() => navigate("/admin/flash-sale")}
+              >
                 Kembali
               </Button>
             </div>

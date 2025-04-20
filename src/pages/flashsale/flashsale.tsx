@@ -57,15 +57,15 @@ const FlashSale: React.FC = () => {
   }, [page]);
 
   const handleAddFlashSale = () => {
-    navigate("/flash-sale/add");
+    navigate("add");
   };
 
   const handleUpdateFlashSale = (code: string) => {
-    navigate(`/flash-sale/update/${code}`);
+    navigate(`update/${code}`);
   };
 
   const handleDetailFlashSale = (code: string) => {
-    navigate(`/flash-sale/detail/${code}`);
+    navigate(`detail/${code}`);
   };
 
   const handleDeleteClick = (code: string) => {

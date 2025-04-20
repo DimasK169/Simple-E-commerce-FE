@@ -10,11 +10,13 @@ import FlashSale from "@/pages/flashsale/flashsale";
 import AddFlashSale from "@/pages/flashsale/add/addFlashSale";
 import Public from "./public";
 import Protected from "./protected";
-import EditProduct from "@/pages/product/editproduct";
 import ProductDetailPage from "@/pages/product/detailProduct";
 import ProductSearch from "@/pages/search/search";
 import UpdateFlashSale from "@/pages/flashsale/update/updateFlashSale";
 import DetailFlashSale from "@/pages/flashsale/detail/detailFlashSale";
+import AdminRoute from "./adminRoutes";
+import Admin from "@/pages/admin/admin";
+import EditProduct from "@/pages/product/editProduct";
 
 export const router = createBrowserRouter([
   {
@@ -55,14 +57,6 @@ export const router = createBrowserRouter([
         element: <Protected />,
         children: [
           {
-            element: <AddProduct />,
-            path: "/products/add",
-          },
-          {
-            element: <EditProduct />,
-            path: "/products/:code",
-          },
-          {
             element: <Cart />,
             path: "/cart",
           },
@@ -74,7 +68,6 @@ export const router = createBrowserRouter([
             element: <UnfinishedPayment />,
             path: "/payment",
           },
-
           {
             element: <Cart />,
             path: "/cart",
@@ -90,16 +83,41 @@ export const router = createBrowserRouter([
         ],
       },
       {
+        element: <AdminRoute />,
+        children: [
+          {
+            element: <AddProduct />,
+            path: "admin/products/add",
+          },
+          {
+            element: <EditProduct />,
+            path: "admin/products/:code",
+          },
+          {
+            element: <ProductDetailPage />,
+            path: "admin/products/view/:code",
+          },
+          {
+            element: <FlashSale />,
+            path: "/admin/flash-sale",
+          },
+          {
+            element: <AddFlashSale />,
+            path: "/admin/flash-sale/add",
+          },
+          {
+            element: <UpdateFlashSale />,
+            path: "admin/flash-sale/update/:code",
+          },
+          {
+            element: <DetailFlashSale />,
+            path: "admin/flash-sale/detail/:code",
+          },
+        ],
+      },
+      {
         element: <Home />,
         index: true,
-      },
-      {
-        element: <FlashSale />,
-        path: "/flash-sale",
-      },
-      {
-        element: <AddFlashSale />,
-        path: "/flash-sale/add",
       },
       {
         element: <ProductDetailPage />,
@@ -108,14 +126,6 @@ export const router = createBrowserRouter([
       {
         element: <ProductSearch />,
         path: "/search",
-      },
-      {
-        element: <UpdateFlashSale />,
-        path: "/flash-sale/update/:code",
-      },
-      {
-        element: <DetailFlashSale />,
-        path: "/flash-sale/detail/:code",
       },
     ],
   },

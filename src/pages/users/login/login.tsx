@@ -19,9 +19,17 @@ function LoginForm() {
         User_Email: email,
         User_Password: password,
       });
-      localStorage.setItem("token", response.data.data.User_Token);
-      setAuth(response.data.data);
-      navigate("/");
+
+      const userData = response.data.data;
+      localStorage.setItem("token", userData.User_Token);
+      setAuth(userData);
+
+      if (userData.User_Role === "Admin") {
+        console.log("test");
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
     } catch (error) {
       console.error("Login error:", error);
     }

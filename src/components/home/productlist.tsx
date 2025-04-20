@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { getProducts } from "@/services/product/list/api";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { Button } from "../ui/button";
-import { LuShoppingCart } from "react-icons/lu";
+import { LuShoppingCart, LuTrash2 } from "react-icons/lu";
 import { useAuth } from "@/context/authContext";
 import {
   Pagination,
@@ -13,9 +13,10 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Link } from "react-router";
+import { Link, useParams } from "react-router";
 import { Content } from "@/services/product/type";
 import { createCart, getCart } from "@/services/cart/cart/api";
+import { LucideEdit2 } from "lucide-react";
 
 export default function ProductList() {
   const { auth } = useAuth();
@@ -24,6 +25,7 @@ export default function ProductList() {
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const pageSize = 8;
+  const params = useParams();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -163,14 +165,6 @@ export default function ProductList() {
                       </span>
                     </div>
                   </CardContent>
-
-                  <CardFooter className="pt-0">
-                    {auth?.User_Role === "Customer" && (
-                      <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                        <LuShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
-                      </Button>
-                    )}
-                  </CardFooter>
                 </Link>
                 <CardFooter className="pt-0">
                   {auth?.User_Role === "Customer" && (
@@ -182,6 +176,23 @@ export default function ProductList() {
                     >
                       <LuShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
                     </Button>
+                  )}
+                  {auth?.User_Role === "Admin" && (
+                    <div className="flex flex-row gap-4 w-full">
+                      <Link
+                        to={`/admin/products/${product.productCode}`}
+                        className="flex-1"
+                      >
+                        <Button className="w-full text-sm py-3 bg-yellow-500 hover:bg-yellow-600">
+                          <LucideEdit2 className="mr-2 h-5 w-5" /> Edit
+                        </Button>
+                      </Link>
+                      <Link to="/" className="flex-1">
+                        <Button className="w-full text-sm py-3 bg-red-600 hover:bg-red-700">
+                          <LuTrash2 className="mr-2 h-5 w-5" /> Delete
+                        </Button>
+                      </Link>
+                    </div>
                   )}
                 </CardFooter>
               </Card>
