@@ -13,6 +13,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { createCart, getCart } from "@/services/cart/cart/api";
 
 export default function ProductList() {
   const { auth } = useAuth();
@@ -43,6 +44,44 @@ export default function ProductList() {
     setCurrentPage(page);
     // Scroll to top when page changes
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const isProductInCart = async (productCode: string) => {
+    try {
+      const response = await getCart(); // ambil semua isi cart user
+      console.log("Isi response cart:", response); // tambahkan ini
+
+      const items = Array.isArray(response.data)
+        ? response.data.filter((item) => item.Product_Code) // pastikan hanya item produk
+        : [];
+      return items.some(
+        (item: { Product_Code: string }) => item.Product_Code === productCode
+      );
+    } catch (err) {
+      console.error("Gagal cek cart:", err);
+      return false;
+    }
+  };
+
+  const handleAdd = async (
+    quantity: number,
+    fsCode: string | null,
+    productCode: string | null
+  ) => {
+    if (!productCode) return;
+
+    const isInCart = await isProductInCart(productCode);
+
+    if (isInCart) {
+      alert("Barang Telah Ada Di Cart");
+    } else {
+      const result = await createCart(quantity, fsCode, productCode);
+      if (result.success) {
+        console.log("Berhasil tambah ke cart");
+      } else {
+        console.error("Gagal tambah ke cart", result.message);
+      }
+    }
   };
 
   // Generate page numbers for pagination
@@ -124,7 +163,12 @@ export default function ProductList() {
 
                 <CardFooter className="pt-0">
                   {auth?.User_Role === "Customer" && (
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                    <Button
+                      onClick={() => {
+                        handleAdd(1, null, product.productCode);
+                      }}
+                      className="w-full bg-blue-600 hover:bg-blue-700"
+                    >
                       <LuShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
                     </Button>
                   )}

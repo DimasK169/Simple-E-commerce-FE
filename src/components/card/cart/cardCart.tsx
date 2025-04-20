@@ -1,6 +1,6 @@
 import { createPayment } from "../../../services/payment/payment/api";
 import { CartItem } from "../../../services/cart/cart/type";
-import { updateCart } from "../../../services/cart/cart/api";
+import { deleteCart, updateCart } from "../../../services/cart/cart/api";
 import { useNavigate } from "react-router";
 import { useState } from "react";
 
@@ -39,6 +39,14 @@ const CardCart: React.FC<CardProps> = ({ data, refetch }) => {
     }
   };
 
+  const handleDelete = async (productCode: string | null) => {
+    const result = await deleteCart(productCode);
+    if (result.success) {
+      refetch(); // refresh tampilan setelah delete berhasil
+    } else {
+      alert("Failed to delete item: " + result.message);
+    }
+  };
   const items = data.slice(0, -1); // semua kecuali yang terakhir
   const totalRow = data[data.length - 1]; // total ada di data terakhir
 
@@ -55,6 +63,7 @@ const CardCart: React.FC<CardProps> = ({ data, refetch }) => {
             <th className="text-center p-4">Price</th>
             <th className="text-center p-4">Quantity</th>
             <th className="text-center p-4">Total</th>
+            <th className="text-center p-4">Hapus</th>
           </tr>
         </thead>
         <tbody>
@@ -117,6 +126,16 @@ const CardCart: React.FC<CardProps> = ({ data, refetch }) => {
                 Rp{" "}
                 {Number(item.Cart_Total_Price_Per_Item ?? 0).toLocaleString()}
               </td>
+              <td className="text-center text-gray-700 font-medium">
+                <div>
+                  <button
+                    onClick={() => handleDelete(item.Product_Code)}
+                    className="px-8 py-3 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 transition duration-200 shadow-md"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </td>
             </tr>
           ))}
           {totalRow && (
@@ -138,7 +157,7 @@ const CardCart: React.FC<CardProps> = ({ data, refetch }) => {
       <div className="text-center mt-8">
         <button
           onClick={() => setIsModalOpen(true)}
-          className="px-8 py-3 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 transition duration-200 shadow-md"
+          className="px-8 py-3 bg-green-600 text-white rounded-lg font-bold hover:bg-green-700 transition duration-200 shadow-md"
         >
           Checkout
         </button>

@@ -9,7 +9,7 @@ export const getCart = async () => {
   }
 };
 
-export const updateCart = async (
+export const createCart = async (
   quantity: number,
   fsCode: string | null,
   productCode: string | null
@@ -19,6 +19,36 @@ export const updateCart = async (
       Fs_Code: fsCode,
       Product_Code: productCode,
       Cart_Quantity: quantity,
+    });
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, message: error.response.data.errors };
+  }
+};
+
+export const updateCart = async (
+  quantity: number,
+  fsCode: string | null,
+  productCode: string | null
+) => {
+  try {
+    const response = await axiosWithConfig.put(`/cart`, {
+      Fs_Code: fsCode,
+      Product_Code: productCode,
+      Cart_Quantity: quantity,
+    });
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, message: error.response.data.errors };
+  }
+};
+
+export const deleteCart = async (productCode: string | null) => {
+  try {
+    const response = await axiosWithConfig.delete(`/cart`, {
+      data: {
+        Product_Code: productCode,
+      },
     });
     return { success: true };
   } catch (error: any) {
