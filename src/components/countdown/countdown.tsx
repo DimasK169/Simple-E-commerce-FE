@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 interface CountdownProps {
   endDate: string;
-  message: string; // optional if you want default value
+  message: string;
 }
 
 export default function Countdown({ endDate, message }: CountdownProps) {

@@ -1,16 +1,21 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import SearchIcon from "@mui/icons-material/Search"; // or your import path
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PersonIcon from "@mui/icons-material/Person";
-import SearchIcon from "@mui/icons-material/Search"; // ✅ Import the icon
-import Notification from "./notification";
+import Notification from "./Notification"; // adjust as needed
 
 const Header: React.FC = () => {
   const [toggle, setToggle] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const handleSearchClick = () => {
-    // Currently an empty function
-    console.log("Search icon clicked");
+    if (search.trim()) {
+      setSearchParams({ search });
+      navigate(`/search?keyword=${encodeURIComponent(search)}`);
+    }
   };
 
   return (
@@ -38,10 +43,14 @@ const Header: React.FC = () => {
       </div>
 
       <nav className="hidden md:flex gap-6">
-        <a href={"/"} className="text-gray-700 hover:text-red-500">
+        <a href={"/cart"} className="text-gray-700 hover:text-red-500">
           <ShoppingCartIcon />
         </a>
-        <a href={"/"} className="text-gray-700 hover:text-red-500">
+        <a
+          href="/login"
+          className="text-gray-700 hover:text-red-500"
+          onClick={() => localStorage.clear()}
+        >
           <PersonIcon />
         </a>
         <Notification />

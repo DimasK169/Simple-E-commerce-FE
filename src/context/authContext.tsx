@@ -15,7 +15,7 @@ type User = {
 };
 
 type AuthState = {
-  auth: User | null;
+  auth: User;
   setAuth: React.Dispatch<React.SetStateAction<User | null>>;
 };
 

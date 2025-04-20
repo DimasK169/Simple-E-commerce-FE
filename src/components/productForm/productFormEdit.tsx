@@ -12,12 +12,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import productClient from "@/services/product/api";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
-import { useAuth } from "@/context/authContext";
+import { getProductsDetail } from "@/services/product/list/api";
+import { urlToFile } from "@/lib/utils";
 
 const formSchema = z.object({
   productName: z.string().min(1, "Product name cannot be empty"),
@@ -34,10 +35,10 @@ const formSchema = z.object({
   productIsAvailable: z.boolean().optional(),
 });
 
-const ProductForm = () => {
+const ProductFormEdit = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { auth } = useAuth();
+  const params = useParams();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -76,10 +77,9 @@ const ProductForm = () => {
     formData.append("price", values.productPrice.toString());
     formData.append("isAvailable", String(values.productIsAvailable));
     formData.append("image", values.productImage);
-    formData.append("createdBy", auth.User_Name);
 
     try {
-      await productClient.postForm(`/product`, formData);
+      await productClient.putForm(`/product/${params.code}`, formData);
       navigate("/");
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -100,12 +100,33 @@ const ProductForm = () => {
     return formatted.replace(/[^\d]/g, "");
   };
 
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const { data } = await getProductsDetail(params.code as string);
+        form.reset({
+          productName: data.productName,
+          productCategory: data.productCategory,
+          productCode: data.productCode,
+          productDescription: data.productDescription,
+          productStock: data.productStock,
+          productPrice: data.productPrice,
+          productIsAvailable: data.productIsAvailable,
+          productImage: await urlToFile(data.productImage, data.productName),
+        });
+        setImagePreview(data.productImage);
+      } catch (error) {
+        toast.error("Failed to load product details.");
+        console.error(error);
+      }
+    };
+    fetchProduct();
+  }, []);
+
   return (
     <Card className="max-w-3xl mx-auto mt-10 shadow-xl rounded-2xl border">
       <CardHeader>
-        <CardTitle className="text-2xl font-semibold">
-          Add New Product
-        </CardTitle>
+        <CardTitle className="text-2xl font-semibold">Edit Product</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -281,4 +302,4 @@ const ProductForm = () => {
   );
 };
 
-export default ProductForm;
+export default ProductFormEdit;

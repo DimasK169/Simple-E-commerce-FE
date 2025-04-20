@@ -74,3 +74,22 @@ export const deleteFlashSale = async (fsCode: string) => {
   }>(`/flash-sale/delete/${fsCode}`);
   return response.data;
 };
+
+export const getActiveFlashSaleCode = async () => {
+  const response = await flashSaleClient.get<{
+    code: string;
+    message: string;
+    data: { FlashSale_Code: string };
+  }>(`/flash-sale/active`);
+  return response.data;
+};
+
+export const fetchAndShowFlashSale = async () => {
+  const code = await getActiveFlashSaleCode();
+  const response = await flashSaleClient.get<{
+    code: string;
+    message: string;
+    data: FlashSaleItem[];
+  }>(`/flash-sale/${code.data.FlashSale_Code}`);
+  return response.data;
+};
