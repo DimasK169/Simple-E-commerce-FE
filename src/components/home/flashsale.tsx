@@ -6,11 +6,51 @@ import { Button } from "../ui/button";
 import { LuShoppingCart } from "react-icons/lu";
 import { useAuth } from "@/context/authContext";
 import dayjs from "dayjs";
+import { createCart, getCart, updateCart } from "@/services/cart/cart/api";
+import { CartItem } from "@/services/cart/cart/type";
 
 const productsPromise = getFlashSale(0, 15);
 export default function FlashSale() {
   const { auth } = useAuth();
   const result = use(productsPromise);
+
+  const isProductInCart = async (productCode: string) => {
+    try {
+      const response = await getCart(); // ambil semua isi cart user
+      console.log("Isi response cart:", response); // tambahkan ini
+
+      const items = Array.isArray(response.data)
+        ? response.data.filter((item) => item.Product_Code) // pastikan hanya item produk
+        : [];
+      return items.some(
+        (item: { Product_Code: string }) => item.Product_Code === productCode
+      );
+    } catch (err) {
+      console.error("Gagal cek cart:", err);
+      return false;
+    }
+  };
+
+  const handleAdd = async (
+    quantity: number,
+    fsCode: string | null,
+    productCode: string | null
+  ) => {
+    if (!productCode) return;
+
+    const isInCart = await isProductInCart(productCode);
+
+    if (isInCart) {
+      alert("Barang Telah Ada Di Cart");
+    } else {
+      const result = await createCart(quantity, fsCode, productCode);
+      if (result.success) {
+        console.log("Berhasil tambah ke cart");
+      } else {
+        console.error("Gagal tambah ke cart", result.message);
+      }
+    }
+  };
 
   return (
     <div>
@@ -53,7 +93,12 @@ export default function FlashSale() {
 
             <CardFooter className="pt-0">
               {auth?.User_Role === "Customer" && (
-                <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                <Button
+                  onClick={() => {
+                    handleAdd(1, product.FlashSale_Code, product.Product_Code);
+                  }}
+                  className="w-full bg-blue-600 hover:bg-blue-700"
+                >
                   <LuShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
                 </Button>
               )}

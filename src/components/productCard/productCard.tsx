@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { createCart } from "@/services/cart/cart/api";
 
 //Buat di pages home ada 2 sesi
 //sesi 1 flash-sale get dari flash sale otomatis discount true
@@ -14,6 +15,8 @@ interface ProductCardProps {
   stock?: number;
   status?: "available" | "na";
   isAdmin?: boolean;
+  flash_sale_code: string | null;
+  product_code: string | null;
 }
 const ProductCard: React.FC<ProductCardProps> = ({
   image,
@@ -23,6 +26,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
   stock,
   status,
   isAdmin,
+  flash_sale_code,
+  product_code,
 }) => {
   return (
     <Card className="w-80 rounded-2xl shadow-md overflow-hidden">
