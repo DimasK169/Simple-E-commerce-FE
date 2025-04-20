@@ -46,7 +46,11 @@ const Header: React.FC = () => {
         <a href={"/cart"} className="text-gray-700 hover:text-red-500">
           <ShoppingCartIcon />
         </a>
-        <a href={"/profile"} className="text-gray-700 hover:text-red-500">
+        <a
+          href="/login"
+          className="text-gray-700 hover:text-red-500"
+          onClick={() => localStorage.clear()}
+        >
           <PersonIcon />
         </a>
         <Notification />

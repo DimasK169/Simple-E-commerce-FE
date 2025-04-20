@@ -73,7 +73,7 @@ export const router = createBrowserRouter([
       },
       {
         element: <ProductDetailPage />,
-        path: "/product/:code",
+        path: "/products/view/:code",
       },
       {
         element: <ProductSearch />,

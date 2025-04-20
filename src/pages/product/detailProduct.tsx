@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { LuMinus, LuPlus, LuShoppingCart } from "react-icons/lu";
+import { LuMinus, LuPlus, LuShoppingCart, LuTrash2 } from "react-icons/lu";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import { getProductsDetail } from "@/services/product/list/api";
 import { Content } from "@/services/product/type";
+import { useAuth } from "@/context/authContext";
+import { LucideEdit2 } from "lucide-react";
 
 export default function ProductDetailPage() {
+  const { auth } = useAuth();
   const [quantity, setQuantity] = useState(1);
   const [data, setData] = useState<Content | null>(null);
   const [loading, setLoading] = useState(true);
@@ -103,9 +106,40 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            <Button className="w-full text-lg py-6" size="lg">
-              <LuShoppingCart className="mr-2 h-5 w-5" /> Add to Cart
-            </Button>
+            <div className="mt-6">
+              {auth?.User_Role === "Customer" && (
+                <Button className="w-full text-lg py-6 mb-4" size="lg">
+                  <LuShoppingCart className="mr-2 h-5 w-5" /> Add to Cart
+                </Button>
+              )}
+
+              {auth?.User_Role === "Admin" ? (
+                <div className="flex gap-4 mb-4">
+                  <Link to={`/products/${params.code}`}>
+                    <Button
+                      className="w-60 text-lg py-6 bg-yellow-500 hover:bg-yellow-600"
+                      size="lg"
+                    >
+                      <LucideEdit2 className="mr-2 h-5 w-5" /> Edit
+                    </Button>
+                  </Link>
+                  <Link to="/">
+                    <Button
+                      className="w-60 text-lg py-6 bg-red-600 hover:bg-red-700"
+                      size="lg"
+                    >
+                      <LuTrash2 className="mr-2 h-5 w-5" /> Delete
+                    </Button>
+                  </Link>
+                </div>
+              ) : (
+                auth?.User_Role === "Customer" && (
+                  <Button className="w-full text-lg py-6 mb-4" size="lg">
+                    <LuShoppingCart className="mr-2 h-5 w-5" /> Add to Cart
+                  </Button>
+                )
+              )}
+            </div>
           </div>
         </Card>
       </div>

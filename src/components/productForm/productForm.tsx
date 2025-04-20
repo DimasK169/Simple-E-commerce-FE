@@ -17,6 +17,7 @@ import productClient from "@/services/product/api";
 import { useNavigate } from "react-router";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
+import { useAuth } from "@/context/authContext";
 
 const formSchema = z.object({
   productName: z.string().min(1, "Product name cannot be empty"),
@@ -36,6 +37,7 @@ const formSchema = z.object({
 const ProductForm = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { auth } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -74,6 +76,7 @@ const ProductForm = () => {
     formData.append("price", values.productPrice.toString());
     formData.append("isAvailable", String(values.productIsAvailable));
     formData.append("image", values.productImage);
+    formData.append("createdBy", auth.User_Name);
 
     try {
       await productClient.postForm(`/product`, formData);

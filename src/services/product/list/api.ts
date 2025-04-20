@@ -19,7 +19,7 @@ export const getProductsDetail = async (code: string) => {
 export const searchProduct = async (
   keyword: string,
   page: number,
-  size: number = 20
+  size: number
 ) => {
   const response = await productClient.get<Root>(`/product/search`, {
     params: {

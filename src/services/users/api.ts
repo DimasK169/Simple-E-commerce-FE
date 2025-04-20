@@ -17,7 +17,7 @@ axiosWithConfig.interceptors.request.use(
 );
 
 export const getMe = async () => {
-  const response = await axiosWithConfig.get<ApiResponse>(`/users/me`, {});
+  const response = await axiosWithConfig.get<ApiResponse>(`/users/getMe`, {});
   return response.data;
 };
 

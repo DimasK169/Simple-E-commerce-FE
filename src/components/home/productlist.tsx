@@ -102,7 +102,7 @@ export default function ProductList() {
                 key={product.id}
                 className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
               >
-                <Link to={`product/${product.productCode}`}>
+                <Link to={`products/view/${product.productCode}`}>
                   <div className="relative">
                     <img
                       src={product.productImage}

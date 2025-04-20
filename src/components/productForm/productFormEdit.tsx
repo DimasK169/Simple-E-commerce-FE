@@ -162,11 +162,7 @@ const ProductFormEdit = () => {
                     <FormItem>
                       <FormLabel>{label}</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder={placeholder}
-                          disabled={name === "productCode"}
-                          {...field}
-                        />
+                        <Input placeholder={placeholder} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
