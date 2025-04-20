@@ -2,14 +2,19 @@ import { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search"; // or your import path
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import PersonIcon from "@mui/icons-material/Person";
-import Notification from "./Notification"; // adjust as needed
+import PersonIcon from "@mui/icons-material/Person"; // adjust as needed
+import Notification from "./notification";
+import { useAuth } from "@/context/authContext";
+import FlashOnIcon from "@mui/icons-material/FlashOn";
+import { FaPlus } from "react-icons/fa6";
+import { BiSolidLogIn, BiSolidLogOut } from "react-icons/bi";
 
 const Header: React.FC = () => {
   const [toggle, setToggle] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { auth } = useAuth();
 
   const handleSearchClick = () => {
     if (search.trim()) {
@@ -42,17 +47,42 @@ const Header: React.FC = () => {
         </button>
       </div>
 
-      <nav className="hidden md:flex gap-6">
-        <a href={"/cart"} className="text-gray-700 hover:text-red-500">
-          <ShoppingCartIcon />
-        </a>
-        <a
-          href="/login"
-          className="text-gray-700 hover:text-red-500"
-          onClick={() => localStorage.clear()}
-        >
-          <PersonIcon />
-        </a>
+      <nav className="hidden md:flex gap-6 items-center">
+        {auth?.User_Role === "Admin" ? (
+          <>
+            <a
+              href="/admin/products/add"
+              className="text-gray-700 hover:text-red-500"
+            >
+              <FaPlus />
+            </a>
+            <a
+              href="/admin/flash-sale"
+              className="text-gray-700 hover:text-red-500"
+            >
+              <FlashOnIcon />
+            </a>
+          </>
+        ) : (
+          <a href="/cart" className="text-gray-700 hover:text-red-500">
+            <ShoppingCartIcon />
+          </a>
+        )}
+
+        {auth ? (
+          <a
+            href="/login"
+            className="text-gray-700 hover:text-red-500"
+            onClick={() => localStorage.clear()}
+          >
+            <BiSolidLogOut />
+          </a>
+        ) : (
+          <a href="/login" className="text-gray-700 hover:text-red-500">
+            <BiSolidLogIn />
+          </a>
+        )}
+
         <Notification />
       </nav>
 

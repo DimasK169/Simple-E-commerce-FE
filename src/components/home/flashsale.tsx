@@ -8,6 +8,8 @@ import { useAuth } from "@/context/authContext";
 import dayjs from "dayjs";
 import { FlashSaleItem } from "@/services/flashsale/type";
 import duration from "dayjs/plugin/duration";
+import { getCart } from "@/services/cart/cart";
+import { createCart } from "@/services/cart/cart/api";
 
 dayjs.extend(duration);
 export default function FlashSale() {
@@ -67,6 +69,8 @@ export default function FlashSale() {
 
     return () => clearInterval(countdownInterval);
   }, [products]);
+
+  if (products.length === 0) return null;
 
   const isProductInCart = async (productCode: string) => {
     try {

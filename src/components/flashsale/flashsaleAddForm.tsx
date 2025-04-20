@@ -18,6 +18,7 @@ import ProductCardSelect from "../productCard/simple/productCard";
 import { getProducts } from "@/services/product/list/api";
 import { useNavigate } from "react-router";
 import { createFlashSale } from "@/services/flashsale/flashsale/api";
+import { useAuth } from "@/context/authContext";
 
 const formSchema = z.object({
   FlashSale_Name: z.string().min(1, "Nama flash sale wajib diisi"),
@@ -33,6 +34,7 @@ const FlashSaleAddForm = () => {
   const [selectedCodes, setSelectedCodes] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { auth } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -71,7 +73,7 @@ const FlashSaleAddForm = () => {
       ...values,
       FlashSale_Discount: values.FlashSale_Discount / 100,
       Product_Code: selectedCodes,
-      FlashSale_CreatedBy: "admin",
+      FlashSale_CreatedBy: auth?.User_Name,
     };
 
     console.log("Final payload:", finalData);

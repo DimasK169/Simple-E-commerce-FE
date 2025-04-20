@@ -107,15 +107,9 @@ export default function ProductDetailPage() {
             </div>
 
             <div className="mt-6">
-              {auth?.User_Role === "Customer" && (
-                <Button className="w-full text-lg py-6 mb-4" size="lg">
-                  <LuShoppingCart className="mr-2 h-5 w-5" /> Add to Cart
-                </Button>
-              )}
-
               {auth?.User_Role === "Admin" ? (
                 <div className="flex gap-4 mb-4">
-                  <Link to={`/products/${params.code}`}>
+                  <Link to={`/admin/products/${params.code}`}>
                     <Button
                       className="w-60 text-lg py-6 bg-yellow-500 hover:bg-yellow-600"
                       size="lg"
