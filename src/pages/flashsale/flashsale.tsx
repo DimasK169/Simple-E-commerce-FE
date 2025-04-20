@@ -3,11 +3,22 @@ import { useNavigate } from "react-router";
 import InfoIcon from "@mui/icons-material/Info";
 import SettingsIcon from "@mui/icons-material/Settings";
 import DeleteIcon from "@mui/icons-material/Delete";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button as MuiButton,
+} from "@mui/material";
 
 import CustomTable from "@/components/ui/custom-table";
-import { getFlashSale } from "@/services/flashsale/flashsale/api";
+import {
+  deleteFlashSale,
+  getFlashSale,
+} from "@/services/flashsale/flashsale/api";
 import { FlashSaleItem } from "@/services/flashsale/type";
 import { Button } from "@/components/ui/button";
+import { toast } from "react-hot-toast";
 
 const FlashSale: React.FC = () => {
   const [data, setData] = useState<FlashSaleItem[]>([]);
@@ -15,22 +26,33 @@ const FlashSale: React.FC = () => {
   const [page, setPage] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(1);
 
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [selectedCode, setSelectedCode] = useState<string | null>(null);
+
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await getFlashSale(page, 10);
-        setData(response.data.content);
-        setTotalPages(response.data.totalPages);
-      } catch (error) {
-        console.error("Error fetching flash sale:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response = await getFlashSale(page, 15);
+      const uniqueMap = new Map();
+      response.data.content.forEach((item: FlashSaleItem) => {
+        if (!item.FlashSale_IsDelete) {
+          if (!uniqueMap.has(item.FlashSale_Code)) {
+            uniqueMap.set(item.FlashSale_Code, item);
+          }
+        }
+      });
+      setData(Array.from(uniqueMap.values()));
+      setTotalPages(response.data.totalPages);
+    } catch (error) {
+      console.error("Error fetching flash sale:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, [page]);
 
@@ -40,6 +62,31 @@ const FlashSale: React.FC = () => {
 
   const handleUpdateFlashSale = (code: string) => {
     navigate(`/flash-sale/update/${code}`);
+  };
+
+  const handleDetailFlashSale = (code: string) => {
+    navigate(`/flash-sale/detail/${code}`);
+  };
+
+  const handleDeleteClick = (code: string) => {
+    setSelectedCode(code);
+    setOpenDeleteModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!selectedCode) return;
+
+    try {
+      await deleteFlashSale(selectedCode);
+      toast.success("Flash Sale berhasil dihapus.");
+      await fetchData();
+    } catch (error) {
+      console.error("Gagal menghapus flash sale", error);
+      toast.error("Gagal menghapus flash sale");
+    } finally {
+      setOpenDeleteModal(false);
+      setSelectedCode(null);
+    }
   };
 
   const columns = [
@@ -59,7 +106,9 @@ const FlashSale: React.FC = () => {
     }
   });
 
-  const filteredData = Array.from(uniqueByCodeMap.values());
+  const filteredData = Array.from(uniqueByCodeMap.values()).sort((a, b) =>
+    a.FlashSale_Code.localeCompare(b.FlashSale_Code)
+  );
 
   const tableData = filteredData.map((item) => ({
     ...item,
@@ -68,12 +117,18 @@ const FlashSale: React.FC = () => {
     FlashSale_EndDate: new Date(item.FlashSale_EndDate).toLocaleString(),
     action: (
       <div className="flex flex-row gap-5 justify-center items-center">
-        <InfoIcon className="text-blue-500 cursor-pointer" />
+        <InfoIcon
+          className="text-blue-500 cursor-pointer"
+          onClick={() => handleDetailFlashSale(item.FlashSale_Code)}
+        />
         <SettingsIcon
           className="text-yellow-500 cursor-pointer"
           onClick={() => handleUpdateFlashSale(item.FlashSale_Code)}
         />
-        <DeleteIcon className="text-red-500 cursor-pointer" />
+        <DeleteIcon
+          className="text-red-500 cursor-pointer"
+          onClick={() => handleDeleteClick(item.FlashSale_Code)}
+        />
       </div>
     ),
   }));
@@ -112,6 +167,23 @@ const FlashSale: React.FC = () => {
           </div>
         </>
       )}
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}>
+        <DialogTitle>Konfirmasi Hapus</DialogTitle>
+        <DialogContent>
+          <p>
+            Anda ingin menghapus <strong>{selectedCode}</strong>?
+          </p>
+        </DialogContent>
+        <DialogActions>
+          <MuiButton onClick={() => setOpenDeleteModal(false)} color="primary">
+            Tidak
+          </MuiButton>
+          <MuiButton onClick={handleConfirmDelete} color="error">
+            Ya
+          </MuiButton>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
