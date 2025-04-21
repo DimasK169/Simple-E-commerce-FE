@@ -2,9 +2,8 @@ import { createBrowserRouter } from "react-router";
 import Layout from "../layout";
 import Home from "@/pages/home/home";
 import AddProduct from "@/pages/product/addProduct";
-import FinishedPayment from "@/pages/payment/finishedPayment.tsx/finishedPayment";
+import FinishedPayment from "@/pages/payment/payment";
 import Login from "../pages/users/login/login";
-import UnfinishedPayment from "../pages/payment/unfinishedPayment/unfinishedPayment";
 import Cart from "../pages/cart/cart";
 import FlashSale from "@/pages/flashsale/flashsale";
 import AddFlashSale from "@/pages/flashsale/add/addFlashSale";
@@ -17,6 +16,7 @@ import DetailFlashSale from "@/pages/flashsale/detail/detailFlashSale";
 import AdminRoute from "./adminRoutes";
 import Admin from "@/pages/admin/admin";
 import EditProduct from "@/pages/product/editProduct";
+import Payment from "@/pages/payment/payment";
 
 export const router = createBrowserRouter([
   {
@@ -36,14 +36,6 @@ export const router = createBrowserRouter([
         element: <Public />,
         children: [
           {
-            element: <FinishedPayment />,
-            path: "/payment/finished",
-          },
-          {
-            element: <UnfinishedPayment />,
-            path: "/payment",
-          },
-          {
             element: <Cart />,
             path: "/cart",
           },
@@ -61,11 +53,7 @@ export const router = createBrowserRouter([
             path: "/cart",
           },
           {
-            element: <FinishedPayment />,
-            path: "/payment/finished",
-          },
-          {
-            element: <UnfinishedPayment />,
+            element: <Payment />,
             path: "/payment",
           },
           {
@@ -75,10 +63,6 @@ export const router = createBrowserRouter([
           {
             element: <FinishedPayment />,
             path: "/payment/finished",
-          },
-          {
-            element: <UnfinishedPayment />,
-            path: "/payment",
           },
         ],
       },

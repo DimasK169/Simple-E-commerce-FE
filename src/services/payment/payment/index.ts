@@ -1,2 +1,2 @@
-import { createPayment, getFinishedPayment, getUnfinishedPayment } from "./api";
-export { createPayment, getFinishedPayment, getUnfinishedPayment };
+import { createPayment, getFinishedPayment } from "./api";
+export { createPayment, getFinishedPayment };
