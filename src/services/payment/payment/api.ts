@@ -18,25 +18,9 @@ export const createPayment = async (type: string) => {
 
 export const getFinishedPayment = async () => {
   try {
-    const response = await axiosWithConfig.get(`/payment/finished`);
+    const response = await axiosWithConfig.get(`/payment`);
     return response.data;
   } catch (error) {
     console.error("API request failed:", error);
-  }
-};
-
-export const getUnfinishedPayment = async () => {
-  const paymentRequest = {
-    status: "pending",
-  };
-
-  try {
-    const response = await axiosWithConfig.get("/payment", {
-      params: paymentRequest,
-    });
-    return response.data;
-  } catch (error) {
-    console.error("API request failed:", error);
-    throw error;
   }
 };

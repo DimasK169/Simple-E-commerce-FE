@@ -1,19 +1,13 @@
 import { useEffect, useState } from "react";
 import { PaymentData } from "../../services/payment/payment/type";
-import {
-  getFinishedPayment,
-  getUnfinishedPayment,
-} from "../../services/payment/payment/index";
+import { getFinishedPayment } from "../../services/payment/payment/index";
 
-export const useGetPayment = (status: "pending" | "finished") => {
+export const useGetPayment = () => {
   const [payment, setPayment] = useState<PaymentData[] | null>(null);
 
   const fetchPayment = async () => {
     try {
-      const response =
-        status === "pending"
-          ? await getUnfinishedPayment()
-          : await getFinishedPayment();
+      const response = await getFinishedPayment();
 
       setPayment(response?.data ?? []);
     } catch (error) {
@@ -23,7 +17,7 @@ export const useGetPayment = (status: "pending" | "finished") => {
 
   useEffect(() => {
     fetchPayment();
-  }, [status]);
+  }, []);
 
   return { payment };
 };
