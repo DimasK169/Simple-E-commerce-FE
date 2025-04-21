@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { searchProduct } from "@/services/product/list/api";
+import { searchProduct, searchProductAdmin } from "@/services/product/list/api";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { Button } from "../ui/button";
 import { LuShoppingCart } from "react-icons/lu";
@@ -16,7 +16,7 @@ import {
 import { Link, useSearchParams } from "react-router";
 import { Content } from "@/services/product/type";
 
-export default function ProductListSearch() {
+export default function ProductListSearchAdmin() {
   const { auth } = useAuth();
   const [products, setProducts] = useState<Content[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -30,7 +30,7 @@ export default function ProductListSearch() {
     const fetchProducts = async () => {
       setIsLoading(true);
       try {
-        const result = await searchProduct(keyword, currentPage, pageSize);
+        const result = await searchProductAdmin(keyword, currentPage, pageSize);
         setProducts(result.data.content);
         setTotalPages(result.data.totalPages);
       } catch (error) {

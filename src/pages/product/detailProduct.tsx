@@ -4,8 +4,8 @@ import { Card } from "@/components/ui/card";
 import { LuMinus, LuPlus, LuShoppingCart, LuTrash2 } from "react-icons/lu";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Link, useParams } from "react-router";
-import { getProductsDetail } from "@/services/product/list/api";
+import { Link, useNavigate, useParams } from "react-router";
+import { deleteProduct, getProductsDetail } from "@/services/product/list/api";
 import { Content } from "@/services/product/type";
 import { useAuth } from "@/context/authContext";
 import { LucideEdit2 } from "lucide-react";
@@ -16,6 +16,7 @@ export default function ProductDetailPage() {
   const [data, setData] = useState<Content | null>(null);
   const [loading, setLoading] = useState(true);
   const params = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -117,14 +118,20 @@ export default function ProductDetailPage() {
                       <LucideEdit2 className="mr-2 h-5 w-5" /> Edit
                     </Button>
                   </Link>
-                  <Link to="/">
-                    <Button
-                      className="w-60 text-lg py-6 bg-red-600 hover:bg-red-700"
-                      size="lg"
-                    >
-                      <LuTrash2 className="mr-2 h-5 w-5" /> Delete
-                    </Button>
-                  </Link>
+                  <Button
+                    className="w-60 text-lg py-6 bg-red-600 hover:bg-red-700"
+                    size="lg"
+                    onClick={async () => {
+                      try {
+                        await deleteProduct(params.code as string);
+                        navigate("/"); // or wherever your admin list page is
+                      } catch (error) {
+                        console.error("Failed to delete product:", error);
+                      }
+                    }}
+                  >
+                    <LuTrash2 className="mr-2 h-5 w-5" /> Delete
+                  </Button>
                 </div>
               ) : (
                 auth?.User_Role === "Customer" && (

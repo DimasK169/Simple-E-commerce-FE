@@ -30,3 +30,23 @@ export const searchProduct = async (
   });
   return response.data;
 };
+
+export const searchProductAdmin = async (
+  keyword: string,
+  page: number,
+  size: number
+) => {
+  const response = await productClient.get<Root>(`/product/searchAdmin`, {
+    params: {
+      keyword,
+      page,
+      size,
+    },
+  });
+  return response.data;
+};
+
+export const deleteProduct = async (code: string) => {
+  const response = await productClient.delete<Product>(`/product/${code}`);
+  return response.data;
+};
