@@ -32,10 +32,28 @@ const Header: React.FC = () => {
     }
   };
 
+  const handleCartClick = () => {
+    navigate(`/cart`);
+  };
+
+  const handlePaymentClick = () => {
+    navigate(`/payment`);
+  };
+
+  const handleTitleClick = () => {
+    navigate(``);
+  };
+
   return (
     <div className="flex flex-row items-center gap-6 py-5 px-6 shadow bg-[#F8F8F8] text-lg font-semibold">
       <h2 className="text-black whitespace-nowrap">
-        <span className="text-red-500">Simple</span> E-Commerce
+        <a
+          onClick={() => {
+            handleTitleClick();
+          }}
+        >
+          <span className="text-red-500">Simple</span> E-Commerce
+        </a>
       </h2>
 
       <div className="relative flex-grow hidden md:block">
@@ -71,9 +89,22 @@ const Header: React.FC = () => {
             </a>
           </>
         ) : (
-          <a href="/cart" className="text-gray-700 hover:text-red-500">
-            <ShoppingCartIcon />
-          </a>
+          <>
+            <a
+              onClick={() => {
+                handleCartClick();
+              }}
+              className="text-gray-700 hover:text-red-500"
+            >
+              <ShoppingCartIcon />
+            </a>
+            <a
+              onClick={handlePaymentClick}
+              className="hover:text-red-500 text-3xl"
+            >
+              <BiListCheck></BiListCheck>
+            </a>
+          </>
         )}
 
         {auth ? (
