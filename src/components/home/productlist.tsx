@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getProducts } from "@/services/product/list/api";
+import { deleteProduct, getProducts } from "@/services/product/list/api";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { Button } from "../ui/button";
 import { LuShoppingCart, LuTrash2 } from "react-icons/lu";
@@ -13,7 +13,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Link, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 import { Content } from "@/services/product/type";
 import { createCart, getCart } from "@/services/cart/cart/api";
 import { LucideEdit2 } from "lucide-react";
@@ -24,8 +24,8 @@ export default function ProductList() {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
   const pageSize = 8;
-  const params = useParams();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -88,34 +88,28 @@ export default function ProductList() {
     }
   };
 
-  // Generate page numbers for pagination
   const getPageNumbers = () => {
     const pageNumbers = [];
     const maxVisiblePages = 5;
 
     if (totalPages <= maxVisiblePages) {
-      // Show all pages if there are fewer than maxVisiblePages
       for (let i = 0; i < totalPages; i++) {
         pageNumbers.push(i);
       }
     } else {
-      // Show a subset of pages with ellipsis
       if (currentPage < 3) {
-        // Near start
         for (let i = 0; i < 4; i++) {
           pageNumbers.push(i);
         }
         pageNumbers.push("ellipsis");
         pageNumbers.push(totalPages - 1);
       } else if (currentPage > totalPages - 4) {
-        // Near end
         pageNumbers.push(0);
         pageNumbers.push("ellipsis");
         for (let i = totalPages - 4; i < totalPages; i++) {
           pageNumbers.push(i);
         }
       } else {
-        // In middle
         pageNumbers.push(0);
         pageNumbers.push("ellipsis");
         for (let i = currentPage - 1; i <= currentPage + 1; i++) {
@@ -178,20 +172,33 @@ export default function ProductList() {
                     </Button>
                   )}
                   {auth?.User_Role === "Admin" && (
-                    <div className="flex flex-row gap-4 w-full">
+                    <div className="flex flex-row gap-2 w-full">
                       <Link
                         to={`/admin/products/${product.productCode}`}
                         className="flex-1"
                       >
-                        <Button className="w-full text-sm py-3 bg-yellow-500 hover:bg-yellow-600">
+                        <Button className="w-full text-sm py-3 bg-yellow-500 hover:bg-yellow-600 flex justify-center items-center text-white rounded-md">
                           <LucideEdit2 className="mr-2 h-5 w-5" /> Edit
                         </Button>
                       </Link>
-                      <Link to="/" className="flex-1">
-                        <Button className="w-full text-sm py-3 bg-red-600 hover:bg-red-700">
-                          <LuTrash2 className="mr-2 h-5 w-5" /> Delete
-                        </Button>
-                      </Link>
+                      <Button
+                        onClick={async () => {
+                          try {
+                            await deleteProduct(product.productCode);
+                            const result = await getProducts(
+                              currentPage,
+                              pageSize
+                            );
+                            setProducts(result.data.content);
+                            setTotalPages(result.data.totalPages);
+                          } catch (error) {
+                            console.error("Failed to delete product:", error);
+                          }
+                        }}
+                        className="flex-1 w-full text-sm py-3 bg-red-600 hover:bg-red-700 flex justify-center items-center text-white rounded-md"
+                      >
+                        <LuTrash2 className="mr-2 h-5 w-5" /> Delete
+                      </Button>
                     </div>
                   )}
                 </CardFooter>

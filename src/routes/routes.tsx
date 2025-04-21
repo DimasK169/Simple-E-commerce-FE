@@ -17,6 +17,8 @@ import DetailFlashSale from "@/pages/flashsale/detail/detailFlashSale";
 import AdminRoute from "./adminRoutes";
 import Admin from "@/pages/admin/admin";
 import EditProduct from "@/pages/product/editProduct";
+import ProductListAdmin from "@/components/home/productlistAdmin";
+import ProductListSearchAdmin from "@/components/search/productsearchlistAdmin";
 
 export const router = createBrowserRouter([
   {
@@ -86,12 +88,16 @@ export const router = createBrowserRouter([
         element: <AdminRoute />,
         children: [
           {
+            element: <ProductListSearchAdmin />,
+            path: "admin/search",
+          },
+          {
             element: <AddProduct />,
-            path: "admin/products/add",
+            path: "/admin/products/add",
           },
           {
             element: <EditProduct />,
-            path: "admin/products/:code",
+            path: "/admin/products/:code",
           },
           {
             element: <ProductDetailPage />,

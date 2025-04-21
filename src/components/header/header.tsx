@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import SearchIcon from "@mui/icons-material/Search"; // or your import path
+import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import PersonIcon from "@mui/icons-material/Person"; // adjust as needed
 import Notification from "./notification";
 import { useAuth } from "@/context/authContext";
 import FlashOnIcon from "@mui/icons-material/FlashOn";
 import { FaPlus } from "react-icons/fa6";
 import { BiSolidLogIn, BiSolidLogOut } from "react-icons/bi";
+import { searchProductAdmin } from "@/services/product/list/api";
 
 const Header: React.FC = () => {
   const [toggle, setToggle] = useState<boolean>(false);
@@ -16,8 +16,17 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
   const { auth } = useAuth();
 
-  const handleSearchClick = () => {
-    if (search.trim()) {
+  const handleSearchClick = async () => {
+    if (!search.trim()) return;
+
+    if (auth?.User_Role === "Admin") {
+      try {
+        await searchProductAdmin(search, 0, 10);
+        navigate(`admin/search?keyword=${encodeURIComponent(search)}`);
+      } catch (err) {
+        console.error("Admin search failed:", err);
+      }
+    } else {
       setSearchParams({ search });
       navigate(`/search?keyword=${encodeURIComponent(search)}`);
     }
@@ -25,12 +34,10 @@ const Header: React.FC = () => {
 
   return (
     <div className="flex flex-row items-center gap-6 py-5 px-6 shadow bg-[#F8F8F8] text-lg font-semibold">
-      {/* Logo */}
       <h2 className="text-black whitespace-nowrap">
         <span className="text-red-500">Simple</span> E-Commerce
       </h2>
 
-      {/* Search bar - full width */}
       <div className="relative flex-grow hidden md:block">
         <input
           type="text"
