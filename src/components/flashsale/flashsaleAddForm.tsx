@@ -69,11 +69,17 @@ const FlashSaleAddForm = () => {
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const addTimezoneOffset = (datetime: string, offset = "+07:00") => {
+      // Remove any existing offset or "Z"
+      return datetime.replace(/(Z|[+-]\d{2}:\d{2})?$/, offset);
+    };
     const finalData = {
       ...values,
       FlashSale_Discount: values.FlashSale_Discount / 100,
       Product_Code: selectedCodes,
       FlashSale_CreatedBy: auth?.User_Name,
+      FlashSale_StartDate: addTimezoneOffset(values.FlashSale_StartDate),
+      FlashSale_EndDate: addTimezoneOffset(values.FlashSale_EndDate),
     };
 
     console.log("Final payload:", finalData);
@@ -82,7 +88,7 @@ const FlashSaleAddForm = () => {
     try {
       await createFlashSale(finalData);
       alert("Flash Sale berhasil ditambahkan!");
-      navigate("/flash-sale");
+      navigate("/admin/flash-sale");
     } catch (err: any) {
       console.error("Gagal menambahkan flash sale:", err);
       alert("Terjadi kesalahan saat menambahkan flash sale.");
