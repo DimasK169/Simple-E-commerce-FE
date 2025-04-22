@@ -70,7 +70,6 @@ const FlashSaleAddForm = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const addTimezoneOffset = (datetime: string, offset = "+07:00") => {
-      // Remove any existing offset or "Z"
       return datetime.replace(/(Z|[+-]\d{2}:\d{2})?$/, offset);
     };
     const finalData = {

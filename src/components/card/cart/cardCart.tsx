@@ -10,7 +10,12 @@ interface CardProps {
 }
 
 const CardCart: React.FC<CardProps> = ({ data, refetch }) => {
-  if (!data) return <p>Loading...</p>;
+  if (!data)
+    return (
+      <div className="text-center">
+        <p>Data Cart Tidak Ada</p>
+      </div>
+    );
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -28,12 +33,11 @@ const CardCart: React.FC<CardProps> = ({ data, refetch }) => {
   ) => {
     const newQuantity = (item.Cart_Quantity || 0) + change;
 
-    // Cegah kuantitas negatif atau 0 jika tidak diperbolehkan
     if (newQuantity < 1) return;
 
     const result = await updateCart(newQuantity, fsCode, productCode);
     if (result.success) {
-      refetch(); // Refresh cart
+      refetch();
     } else {
       alert("Failed to update cart: " + result.message);
     }
@@ -42,7 +46,7 @@ const CardCart: React.FC<CardProps> = ({ data, refetch }) => {
   const handleDelete = async (productCode: string | null) => {
     const result = await deleteCart(productCode);
     if (result.success) {
-      refetch(); // refresh tampilan setelah delete berhasil
+      refetch();
     } else {
       alert("Failed to delete item: " + result.message);
     }

@@ -72,41 +72,17 @@ export default function FlashSale() {
 
   if (products.length === 0) return null;
 
-  const isProductInCart = async (productCode: string) => {
-    try {
-      const response = await getCart(); // ambil semua isi cart user
-      console.log("Isi response cart:", response); // tambahkan ini
-
-      const items = Array.isArray(response.data)
-        ? response.data.filter((item) => item.Product_Code) // pastikan hanya item produk
-        : [];
-      return items.some(
-        (item: { Product_Code: string }) => item.Product_Code === productCode
-      );
-    } catch (err) {
-      console.error("Gagal cek cart:", err);
-      return false;
-    }
-  };
-
   const handleAdd = async (
     quantity: number,
     fsCode: string | null,
     productCode: string | null
   ) => {
-    if (!productCode) return;
-
-    const isInCart = await isProductInCart(productCode);
-
-    if (isInCart) {
-      alert("Barang Telah Ada Di Cart");
+    const result = await createCart(quantity, fsCode, productCode);
+    console.log("Add");
+    if (result.success) {
+      console.log("Berhasil tambah ke cart");
     } else {
-      const result = await createCart(quantity, fsCode, productCode);
-      if (result.success) {
-        console.log("Berhasil tambah ke cart");
-      } else {
-        console.error("Gagal tambah ke cart", result.message);
-      }
+      console.error("Gagal tambah ke cart", result.message);
     }
   };
 
