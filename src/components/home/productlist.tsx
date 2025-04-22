@@ -17,6 +17,7 @@ import { Link, useNavigate, useParams } from "react-router";
 import { Content } from "@/services/product/type";
 import { createCart, getCart } from "@/services/cart/cart/api";
 import { LucideEdit2 } from "lucide-react";
+import { fetchAndShowFlashSale } from "@/services/flashsale/flashsale/api";
 
 export default function ProductList() {
   const { auth } = useAuth();
@@ -24,6 +25,7 @@ export default function ProductList() {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [flashSaleCodes, setFlashSaleCodes] = useState<string[]>([]);
   const navigate = useNavigate();
   const pageSize = 8;
 
@@ -34,11 +36,30 @@ export default function ProductList() {
         const result = await getProducts(currentPage, pageSize);
         const allProducts = result.data.content;
 
+        let flashCodes: string[] = [];
+
+        try {
+          const flashResult = await fetchAndShowFlashSale();
+
+          if (
+            flashResult &&
+            flashResult.data &&
+            Array.isArray(flashResult.data)
+          ) {
+            flashCodes = flashResult.data.map((item) => item.Product_Code);
+          }
+        } catch (err) {
+          console.error("Gagal mengambil flash sale:", err);
+        }
+        setFlashSaleCodes(flashCodes);
+
         // Hanya tampilkan produk tersedia jika role adalah Customer
         const filteredProducts =
           auth?.User_Role === "Customer"
             ? allProducts.filter(
-                (product) => product.productIsAvailable === true
+                (product) =>
+                  product.productIsAvailable === true &&
+                  !flashCodes.includes(product.productCode)
               )
             : allProducts;
 
@@ -60,41 +81,17 @@ export default function ProductList() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const isProductInCart = async (productCode: string) => {
-    try {
-      const response = await getCart(); // ambil semua isi cart user
-      console.log("Isi response cart:", response); // tambahkan ini
-
-      const items = Array.isArray(response.data)
-        ? response.data.filter((item) => item.Product_Code) // pastikan hanya item produk
-        : [];
-      return items.some(
-        (item: { Product_Code: string }) => item.Product_Code === productCode
-      );
-    } catch (err) {
-      console.error("Gagal cek cart:", err);
-      return false;
-    }
-  };
-
   const handleAdd = async (
     quantity: number,
     fsCode: string | null,
     productCode: string | null
   ) => {
-    if (!productCode) return;
-
-    const isInCart = await isProductInCart(productCode);
-
-    if (isInCart) {
-      alert("Barang Telah Ada Di Cart");
+    const result = await createCart(quantity, fsCode, productCode);
+    console.log("Add");
+    if (result.success) {
+      console.log("Berhasil tambah ke cart");
     } else {
-      const result = await createCart(quantity, fsCode, productCode);
-      if (result.success) {
-        console.log("Berhasil tambah ke cart");
-      } else {
-        console.error("Gagal tambah ke cart", result.message);
-      }
+      console.error("Gagal tambah ke cart", result.message);
     }
   };
 

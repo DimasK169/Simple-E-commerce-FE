@@ -115,7 +115,7 @@ const FlashSaleUpdateForm = () => {
       setLoading(true);
       await updateFlashSale(code!, finalData);
       alert("Flash Sale berhasil diupdate!");
-      navigate("/flash-sale");
+      navigate("/admin/flash-sale");
     } catch (err) {
       console.error("Gagal update:", err);
       alert("Terjadi kesalahan saat mengupdate flash sale.");
