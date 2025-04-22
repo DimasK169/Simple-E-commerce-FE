@@ -32,8 +32,18 @@ export default function ProductList() {
       setIsLoading(true);
       try {
         const result = await getProducts(currentPage, pageSize);
-        setProducts(result.data.content);
-        setTotalPages(result.data.totalPages);
+        const allProducts = result.data.content;
+
+        // Hanya tampilkan produk tersedia jika role adalah Customer
+        const filteredProducts =
+          auth?.User_Role === "Customer"
+            ? allProducts.filter(
+                (product) => product.productIsAvailable === true
+              )
+            : allProducts;
+
+        setProducts(filteredProducts);
+        setTotalPages(result.data.totalPages); // opsional: bisa kamu hitung ulang kalau pakai filter di backend
       } catch (error) {
         console.error("Failed to fetch products:", error);
       } finally {

@@ -70,7 +70,6 @@ const ProductFormEdit = () => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const formData = new FormData();
     formData.append("name", values.productName);
-    formData.append("code", values.productCode);
     formData.append("description", values.productDescription);
     formData.append("category", values.productCategory);
     formData.append("stock", values.productStock.toString());
