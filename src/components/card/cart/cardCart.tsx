@@ -188,6 +188,12 @@ const CardCart: React.FC<CardProps> = ({ data, refetch }) => {
                 Akulaku
               </button>
               <button
+                onClick={() => pay("bank_transfer")}
+                className="bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md font-semibold"
+              >
+                Permata
+              </button>
+              <button
                 onClick={() => setIsModalOpen(false)}
                 className="text-sm text-gray-500 mt-2 hover:underline"
               >
