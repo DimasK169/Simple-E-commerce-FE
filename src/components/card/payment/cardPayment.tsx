@@ -69,11 +69,17 @@ const Card: React.FC<CardProps> = ({ data }) => {
           const isOpen = openIndex === index;
           const endDate = item.Payment_End_Date.toString();
           const paymentBody = item.Payment_Third_Party;
-          const { qrUrl, deeplinkUrl } = extractUrlsFromResponse(paymentBody);
+          const { qrUrl, deeplinkUrl, redirectUrl, permataVaNumber } =
+            extractUrlsFromResponse(paymentBody);
           const isSettlementOrExpire =
             item.Payment_Status === "settlement" ||
             item.Payment_Status === "expire";
+          const akuLaku = redirectUrl;
 
+          const paymentUrl: string = (deeplinkUrl ?? redirectUrl ?? "") || "";
+
+          console.log(redirectUrl);
+          console.log(permataVaNumber);
           return (
             <div
               key={index}
@@ -100,6 +106,18 @@ const Card: React.FC<CardProps> = ({ data }) => {
                     <strong>Total Harga:</strong> Rp{" "}
                     {item.Cart_Total_Price.toLocaleString()}
                   </p>
+                  <p>
+                    <strong>Tanggal Transaksi:</strong>{" "}
+                    {new Date(item.Payment_Start_Date).toLocaleString("id-ID", {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: false,
+                      timeZone: "Asia/Jakarta",
+                    })}
+                  </p>
                 </div>
 
                 <div className="flex-1 ps-5 space-y-1">
@@ -119,6 +137,18 @@ const Card: React.FC<CardProps> = ({ data }) => {
                     >
                       {item.Payment_Status}
                     </span>
+                  </p>
+                  <p>
+                    <strong>Tanggal Expired: </strong>
+                    {new Date(item.Payment_End_Date).toLocaleString("id-ID", {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: false,
+                      timeZone: "Asia/Jakarta",
+                    })}
                   </p>
                 </div>
 
@@ -172,52 +202,91 @@ const Card: React.FC<CardProps> = ({ data }) => {
               {isOpen && (
                 <div className="mt-5 bg-gray-50 p-4 rounded-lg">
                   <p className="font-medium mb-3 text-gray-700">Cart Items:</p>
-                  {item.Product.map((detail: ProductItem, idx: number) => (
-                    <div
-                      key={idx}
-                      className="grid grid-cols-3 gap-4 text-sm text-center border-b border-gray-200 py-2"
-                    >
-                      <span className="text-gray-800 break-words">
-                        {detail.Product_Name}
-                      </span>
-                      <span className="text-gray-600">
-                        {detail.Product_Quantity} pcs
-                      </span>
-                      <span className="text-gray-700 font-medium">
-                        Rp{" "}
-                        {Number(
-                          detail.Cart_Total_Price_Per_Item
-                        ).toLocaleString()}
-                      </span>
-                    </div>
-                  ))}
+                  {Array.isArray(item.Product) && item.Product.length > 0 ? (
+                    item.Product.map((detail: ProductItem, idx: number) => (
+                      <div
+                        key={idx}
+                        className="grid grid-cols-3 gap-4 text-sm text-center border-b border-gray-200 py-2"
+                      >
+                        <span className="text-gray-800 break-words">
+                          {detail.Product_Name}
+                        </span>
+                        <span className="text-gray-600">
+                          {detail.Product_Quantity} pcs
+                        </span>
+                        <span className="text-gray-700 font-medium">
+                          Rp{" "}
+                          {Number(
+                            detail.Cart_Total_Price_Per_Item
+                          ).toLocaleString()}
+                        </span>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-gray-500 text-sm text-center">
+                      Produk tidak tersedia
+                    </p>
+                  )}
 
-                  {!isSettlementOrExpire && qrUrl && (
-                    <div className="mt-4 flex flex-col items-center">
-                      <p className="font-medium text-gray-700 mb-2">
-                        Scan QR Code:
-                      </p>
-                      <QRCode value={qrUrl} size={128} />
-                      <div className="mt-4 flex gap-2">
-                        <button
-                          onClick={() => copyToClipboard(qrUrl!)}
-                          className="bg-blue-500 text-white px-4 py-2 rounded-full"
-                        >
-                          Copy QR Code URL
-                        </button>
-                        {deeplinkUrl && (
-                          <a
-                            href={deeplinkUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="bg-blue-500 text-white px-4 py-2 rounded-full"
-                          >
-                            Go to Payment
-                          </a>
+                  {!isSettlementOrExpire &&
+                    (qrUrl || akuLaku || deeplinkUrl || permataVaNumber) && (
+                      <div className="mt-4 flex flex-col items-center">
+                        {qrUrl && (
+                          <>
+                            <p className="font-medium text-gray-700 mb-2">
+                              Scan QR Code:
+                            </p>
+                            <QRCode value={qrUrl} size={128} className="mb-2" />
+                            <button
+                              onClick={() => copyToClipboard(qrUrl!)}
+                              className="bg-red-500 text-white px-4 py-2 rounded-full"
+                            >
+                              Copy QR Code URL
+                            </button>
+                          </>
+                        )}
+
+                        <div className="mt-4 flex gap-2">
+                          {akuLaku && (
+                            <a
+                              href={akuLaku}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="bg-blue-500 text-white px-4 py-2 rounded-full"
+                            >
+                              Go to Payment
+                            </a>
+                          )}
+                          {deeplinkUrl && (
+                            <a
+                              href={deeplinkUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="bg-blue-500 text-white px-4 py-2 rounded-full"
+                            >
+                              Go to Payment
+                            </a>
+                          )}
+                        </div>
+
+                        {permataVaNumber && (
+                          <>
+                            <strong
+                              rel="noopener noreferrer"
+                              className="bg-red-500 text-white px-4 py-2 rounded-2xl mb-2"
+                            >
+                              VA = {permataVaNumber}
+                            </strong>
+                            <a
+                              href="https://simulator.sandbox.midtrans.com/openapi/va/index?bank=permata"
+                              className="bg-blue-500 text-white px-4 py-2 rounded-full"
+                            >
+                              Go To Payment
+                            </a>
+                          </>
                         )}
                       </div>
-                    </div>
-                  )}
+                    )}
                 </div>
               )}
             </div>
