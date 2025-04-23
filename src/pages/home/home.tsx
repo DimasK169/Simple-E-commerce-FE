@@ -4,7 +4,7 @@ import React, { Suspense } from "react";
 
 const ProductsPage: React.FC = () => {
   return (
-    <div className="p-8">
+    <div className="container mx-auto px-4 py-8 space-y-10">
       <Suspense fallback="loading">
         <FlashSale />
       </Suspense>
