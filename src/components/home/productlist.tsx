@@ -175,6 +175,11 @@ export default function ProductList() {
                       </Link>
                       <Button
                         onClick={async () => {
+                          const confirmDelete = window.confirm(
+                            "Are you sure you want to delete this product?"
+                          );
+                          if (!confirmDelete) return;
+
                           try {
                             await deleteProduct(product.productCode);
                             const result = await getProducts(

@@ -122,6 +122,11 @@ export default function ProductDetailPage() {
                     className="w-60 text-lg py-6 bg-red-600 hover:bg-red-700"
                     size="lg"
                     onClick={async () => {
+                      const confirmDelete = window.confirm(
+                        "Are you sure you want to delete this product?"
+                      );
+                      if (!confirmDelete) return;
+
                       try {
                         await deleteProduct(params.code as string);
                         navigate("/"); // or wherever your admin list page is
