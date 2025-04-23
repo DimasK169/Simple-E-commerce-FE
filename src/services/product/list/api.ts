@@ -1,8 +1,14 @@
 import productClient from "../api";
 import { Product, Root } from "../type";
 
-export const getProducts = async (page: number, size: number = 20) => {
-  const response = await productClient.get<Root>(`/product`, {
+export const getProducts = async (
+  page: number,
+  size: number = 20,
+  role: string = "Customer"
+) => {
+  const endpoint =
+    role === "Admin" ? "/product/getForAdmin" : "/product/getForCustomer";
+  const response = await productClient.get<Root>(endpoint, {
     params: {
       page,
       size,

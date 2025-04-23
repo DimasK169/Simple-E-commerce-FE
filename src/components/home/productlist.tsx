@@ -33,38 +33,23 @@ export default function ProductList() {
     const fetchProducts = async () => {
       setIsLoading(true);
       try {
-        const result = await getProducts(currentPage, pageSize);
+        const userRole = auth?.User_Role || "Customer"; // default to Customer
+        const result = await getProducts(currentPage, pageSize, userRole);
         const allProducts = result.data.content;
 
         let flashCodes: string[] = [];
-
         try {
           const flashResult = await fetchAndShowFlashSale();
 
-          if (
-            flashResult &&
-            flashResult.data &&
-            Array.isArray(flashResult.data)
-          ) {
+          if (flashResult?.data && Array.isArray(flashResult.data)) {
             flashCodes = flashResult.data.map((item) => item.Product_Code);
           }
         } catch (err) {
           console.error("Gagal mengambil flash sale:", err);
         }
         setFlashSaleCodes(flashCodes);
-
-        // Hanya tampilkan produk tersedia jika role adalah Customer
-        const filteredProducts =
-          auth?.User_Role === "Customer"
-            ? allProducts.filter(
-                (product) =>
-                  product.productIsAvailable === true &&
-                  !flashCodes.includes(product.productCode)
-              )
-            : allProducts;
-
-        setProducts(filteredProducts);
-        setTotalPages(result.data.totalPages); // opsional: bisa kamu hitung ulang kalau pakai filter di backend
+        setProducts(allProducts);
+        setTotalPages(result.data.totalPages);
       } catch (error) {
         console.error("Failed to fetch products:", error);
       } finally {
@@ -73,7 +58,7 @@ export default function ProductList() {
     };
 
     fetchProducts();
-  }, [currentPage]);
+  }, [currentPage, auth?.User_Role]); // re-run if role changes
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
