@@ -9,6 +9,7 @@ import { deleteProduct, getProductsDetail } from "@/services/product/list/api";
 import { Content } from "@/services/product/type";
 import { useAuth } from "@/context/authContext";
 import { LucideEdit2 } from "lucide-react";
+import { createCart } from "@/services/cart/cart/api";
 
 export default function ProductDetailPage() {
   const { auth } = useAuth();
@@ -34,8 +35,23 @@ export default function ProductDetailPage() {
   }, [params.code]);
 
   const incrementQuantity = () => setQuantity((prev) => prev + 1);
+
   const decrementQuantity = () =>
     setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+
+  const handleAdd = async (
+    quantity: number,
+    fsCode: string | null,
+    productCode: string | null
+  ) => {
+    const result = await createCart(quantity, fsCode, productCode);
+    console.log("Add");
+    if (result.success) {
+      console.log("Berhasil tambah ke cart");
+    } else {
+      console.error("Gagal tambah ke cart", result.message);
+    }
+  };
 
   if (loading) {
     return (
@@ -101,6 +117,7 @@ export default function ProductDetailPage() {
                   variant="outline"
                   size="icon"
                   onClick={incrementQuantity}
+                  disabled={quantity >= data.productStock}
                 >
                   <LuPlus className="h-4 w-4" />
                 </Button>
@@ -140,7 +157,13 @@ export default function ProductDetailPage() {
                 </div>
               ) : (
                 auth?.User_Role === "Customer" && (
-                  <Button className="w-full text-lg py-6 mb-4" size="lg">
+                  <Button
+                    onClick={() => {
+                      handleAdd(quantity, null, params.code as string);
+                    }}
+                    className="w-full text-lg py-6 mb-4"
+                    size="lg"
+                  >
                     <LuShoppingCart className="mr-2 h-5 w-5" /> Add to Cart
                   </Button>
                 )

@@ -1,4 +1,6 @@
+import productClient from "@/services/product/api";
 import axiosWithConfig from "../api";
+import { Product } from "@/services/product/type";
 
 export const getCart = async () => {
   try {
@@ -27,7 +29,7 @@ export const createCart = async (
 };
 
 export const updateCart = async (
-  quantity: number,
+  quantity: number | null,
   fsCode: string | null,
   productCode: string | null
 ) => {

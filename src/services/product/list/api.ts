@@ -52,6 +52,11 @@ export const searchProductAdmin = async (
   return response.data;
 };
 
+export const getProduct = async (code: string) => {
+  const response = await productClient.get<Product>(`/product/${code}`);
+  return response.data;
+};
+
 export const deleteProduct = async (code: string) => {
   const response = await productClient.delete<Product>(`/product/${code}`);
   return response.data;
