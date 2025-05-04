@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/pagination";
 import { Link, useSearchParams } from "react-router";
 import { Content } from "@/services/product/type";
+import { createCart } from "@/services/cart/cart/api";
 
 export default function ProductListSearch() {
   const { auth } = useAuth();
@@ -42,6 +43,20 @@ export default function ProductListSearch() {
 
     fetchProducts();
   }, [currentPage]);
+
+  const handleAdd = async (
+    quantity: number,
+    fsCode: string | null,
+    productCode: string | null
+  ) => {
+    const result = await createCart(quantity, fsCode, productCode);
+    console.log("Add");
+    if (result.success) {
+      console.log("Berhasil tambah ke cart");
+    } else {
+      console.error("Gagal tambah ke cart", result.message);
+    }
+  };
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -120,15 +135,19 @@ export default function ProductListSearch() {
                       </span>
                     </div>
                   </CardContent>
-
-                  <CardFooter className="pt-0">
-                    {auth?.User_Role === "Customer" && (
-                      <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                        <LuShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
-                      </Button>
-                    )}
-                  </CardFooter>
                 </Link>
+                <CardFooter className="pt-0">
+                  {auth?.User_Role === "Customer" && (
+                    <Button
+                      onClick={() => {
+                        handleAdd(1, null, product.productCode);
+                      }}
+                      className="w-full bg-blue-600 hover:bg-blue-700"
+                    >
+                      <LuShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
+                    </Button>
+                  )}
+                </CardFooter>
               </Card>
             ))}
           </div>
