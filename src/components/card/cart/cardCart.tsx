@@ -3,6 +3,7 @@ import { CartItem } from "../../../services/cart/cart/type";
 import { deleteCart, updateCart } from "../../../services/cart/cart/api";
 import { useNavigate } from "react-router";
 import { useState } from "react";
+import { getProduct } from "@/services/product/list/api";
 
 interface CardProps {
   data: CartItem[] | null;
@@ -18,6 +19,9 @@ const CardCart: React.FC<CardProps> = ({ data, refetch }) => {
     );
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [disabledItems, setDisabledItems] = useState<{
+    [key: string]: boolean;
+  }>({});
 
   const pay = async (type: string) => {
     const result = await createPayment(type);
@@ -31,11 +35,39 @@ const CardCart: React.FC<CardProps> = ({ data, refetch }) => {
     fsCode: string | null,
     productCode: string | null
   ) => {
-    const newQuantity = (item.Cart_Quantity || 0) + change;
+    if (item.Product_Quantity != 0) {
+      const newQuantity = (item.Cart_Quantity || 0) + change;
+      if (newQuantity < 1) return;
 
+      const result = await updateCart(
+        item.Cart_Quantity + change,
+        fsCode,
+        productCode
+      );
+      if (result.success) {
+        refetch();
+      } else {
+        alert("Failed to update cart: " + result.message);
+      }
+    } else {
+      alert("Failed to update cart: Stock Habis");
+    }
+  };
+
+  const handleUpdateQuantityMinus = async (
+    item: CartItem,
+    change: number,
+    fsCode: string | null,
+    productCode: string | null
+  ) => {
+    const newQuantity = (item.Cart_Quantity || 0) + change;
     if (newQuantity < 1) return;
 
-    const result = await updateCart(newQuantity, fsCode, productCode);
+    const result = await updateCart(
+      item.Cart_Quantity + change,
+      fsCode,
+      productCode
+    );
     if (result.success) {
       refetch();
     } else {
@@ -97,7 +129,7 @@ const CardCart: React.FC<CardProps> = ({ data, refetch }) => {
                 <div className="flex justify-center items-center">
                   <button
                     onClick={() =>
-                      handleUpdateQuantity(
+                      handleUpdateQuantityMinus(
                         item,
                         -1,
                         item.Fs_Code,
@@ -120,6 +152,7 @@ const CardCart: React.FC<CardProps> = ({ data, refetch }) => {
                         item.Product_Code
                       )
                     }
+                    disabled={!!disabledItems[item.Product_Code || ""]}
                     className="px-2 py-1 border border-gray-300 rounded hover:bg-gray-200 transition"
                   >
                     +
